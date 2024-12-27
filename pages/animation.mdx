@@ -1,0 +1,36 @@
+# Animation Examples
+
+import NxTextAnimation from '../components/NxTextAnimation'
+
+## Fade In Animation
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-animate="fade-in"
+  data-splitting="words"
+  data-stagger="0.1"
+>
+  This text will fade in word by word
+</NxTextAnimation>
+
+## Slide Animation
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-animate="slide"
+  data-splitting="words"
+  data-axis="x"
+>
+  This text will slide in from the right
+</NxTextAnimation>
+
+## Combined Animation
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-animate="fade-in slide"
+  data-splitting="words"
+  data-stagger="0.2"
+>
+  This text combines fade and slide animations
+</NxTextAnimation> 
