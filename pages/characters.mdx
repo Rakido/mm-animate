@@ -1,0 +1,38 @@
+# Animation par Caractères
+
+import NxTextAnimation from '../components/NxTextAnimation'
+
+## Animation Simple
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-animate="fade-in"
+  data-splitting="chars"
+  data-stagger="0.05"
+>
+  Chaque lettre apparaît une par une
+</NxTextAnimation>
+
+## Slide depuis la Droite
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-animate="slide"
+  data-splitting="chars"
+  data-axis="x"
+  data-stagger="0.03"
+>
+  Les lettres glissent de la droite
+</NxTextAnimation>
+
+## Animation Combinée
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-animate="fade-in slide"
+  data-splitting="chars"
+  data-axis="y"
+  data-stagger="0.04"
+>
+  Fondu et glissement par caractère
+</NxTextAnimation> 

@@ -1,0 +1,40 @@
+# Animations au Défilement
+
+import NxTextAnimation from '../components/NxTextAnimation'
+
+## Caractères avec Scrub
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-animate="fade-in slide"
+  data-splitting="chars"
+  data-axis="y"
+  data-scrub="true"
+>
+  Animation fluide au défilement
+</NxTextAnimation>
+
+## Mots avec Scrub
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-animate="fade-in slide"
+  data-splitting="words"
+  data-axis="x"
+  data-scrub="0.5"
+>
+  Les mots suivent le défilement
+</NxTextAnimation>
+
+## Lignes avec Scrub
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-animate="lines-up"
+  data-splitting="lines"
+  data-scrub="true"
+>
+  Les lignes montent
+  Au rythme du
+  Défilement de la page
+</NxTextAnimation> 

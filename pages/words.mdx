@@ -1,0 +1,37 @@
+# Animation par Mots
+
+import NxTextAnimation from '../components/NxTextAnimation'
+
+## Fade In Simple
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-animate="fade-in"
+  data-splitting="words"
+  data-stagger="0.1"
+>
+  Chaque mot apparaît progressivement
+</NxTextAnimation>
+
+## Effet Shutter
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-animate="shutter-word"
+  data-splitting="words"
+  data-color="#4F46E5"
+>
+  Effet volet sur chaque mot
+</NxTextAnimation>
+
+## Slide et Fade
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-animate="fade-in slide"
+  data-splitting="words"
+  data-axis="x"
+  data-stagger="0.15"
+>
+  Les mots glissent et apparaissent
+</NxTextAnimation> 

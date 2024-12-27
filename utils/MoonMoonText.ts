@@ -79,6 +79,12 @@ export class MoonMoonText {
           const animationTypes = element.getAttribute('data-animate')?.split(' ') || [];
           const axis = element.getAttribute('data-axis');
           const axisValue = element.getAttribute('data-axis-value') || (axis?.startsWith('-') ? '-100%' : '100%');
+          const rotateValue = parseFloat(element.getAttribute('data-rotate')) || 0;
+          const skewValue = parseFloat(element.getAttribute('data-skew')) || 0;
+          const scrubAttr = element.getAttribute('data-scrub');
+          const scrub = scrubAttr === 'true' ? true : (scrubAttr ? parseFloat(scrubAttr) : false);
+          const startTrigger = element.dataset.start || "top bottom-=10%";
+          const endTrigger = element.dataset.end || "bottom top+=10%";
 
           let textContent;
           const splitType = element.getAttribute('data-splitting');
