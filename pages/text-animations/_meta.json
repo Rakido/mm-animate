@@ -1,3 +1,12 @@
 {
-  "basic": "Basic Animations"
-} 
+  "basic": "Basics",
+  "types": "Types of animations",
+  "timings": "Timings et délais",
+  "transformation": "Transformations",
+  "easings": "Easings",
+  "words": "Words",
+  "paragraphs": "Paragraphs",
+  "scroll-events": "Scroll Events",
+  "complexes-animations": "Complexes Animations"
+ 
+}
