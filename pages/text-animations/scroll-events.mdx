@@ -1,0 +1,57 @@
+# Scroll Events
+
+import NxTextAnimation from '../../components/NxTextAnimation'
+
+## Déclenchement des animations
+
+L'attribut `data-scrub` permet de déclencher les animations lors du scroll :
+
+```html
+<div 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="slide"
+  data-stagger="0.1"
+  data-scrub="true"
+>
+  Les caractères s'animent au scroll
+</div>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="fade-in"
+  data-stagger="0.1"
+  data-scrub="true"
+>
+  Chaque lettre apparaît une par une
+</NxTextAnimation>
+
+---
+
+## Ajustement du scroll
+
+En passant une valeur à `data-scrub` on peux ajuster le scroll de l'animation :
+
+```html
+<div 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="slide"
+  data-stagger="0.1"
+  data-scrub="2"
+>
+  Les caractères réagissent au scroll
+</div>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="fade-in"
+  data-stagger="0.1"
+  data-scrub="2"
+>
+  Les caractères réagissent au scroll
+</NxTextAnimation>

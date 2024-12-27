@@ -1,0 +1,26 @@
+# Paragraphs animations
+
+import NxTextAnimation from '../../components/NxTextAnimation'
+
+## Animation de textes longs
+
+Pour animer un paragraphe à mot il faut utiliser `data-splitting="lines"` combiné à `data-animate="lines-up"`.
+
+```html
+<h1 
+  data-scroll-text-reveal 
+  data-splitting="lines"
+  data-animate="slide"
+>
+  Animer mot par mot
+</h1>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="lines"
+  data-animate="lines-up"
+>
+La lune, notre fidèle compagne céleste, illumine nos nuits depuis des millénaires. Son doux éclat argenté a inspiré poètes et rêveurs à travers les âges. Ses phases mystérieuses rythment les marées et influencent subtilement la vie sur Terre. Quand elle est pleine, elle baigne le monde d'une lueur magique qui transforme le paysage nocturne en un spectacle enchanteur.
+</NxTextAnimation>
+

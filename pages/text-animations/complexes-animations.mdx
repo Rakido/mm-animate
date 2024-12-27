@@ -1,0 +1,64 @@
+# Complexes Animations
+
+import NxTextAnimation from '../../components/NxTextAnimation'
+
+## Animation en volet
+
+Une animation en volet peux être déclenchée avec `data-animate="shutter-word"`.
+La couleur de départ est gérée par `data-color`.  
+L'axe est géré par `data-axis`.
+```html
+<h3 
+  data-scroll-text-reveal 
+  data-splitting="words" 
+  data-animate="shutter-word" 
+  data-axis="-x" 
+  data-color="#0000ff"
+>
+  Animation en volet
+</h3>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="words" 
+  data-animate="fade-in slide shutter-word" 
+  data-axis="-x" 
+  data-color="#0000ff"
+>
+  Exemple d'animation en volet
+</NxTextAnimation>
+
+---
+
+## Combinaison d'Animations
+
+Plusieurs effets d'animation peuvent être combinés :
+
+```html
+<h1 
+  data-scroll-text-reveal 
+  data-splitting="words"
+  data-animate="fade-in slide"
+  data-axis="-y"
+  data-skew="20"
+  data-stagger="0.04" 
+  data-duration="1.5"
+>
+  Combinaison de fondu et glissement
+</h1>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="words"
+  data-animate="fade-in slide"
+  data-axis="y"
+  data-skew="20"
+  data-stagger="0.04" 
+  data-duration="1.5"
+>
+  Combinaison de fondu et glissement
+</NxTextAnimation>
+
+---

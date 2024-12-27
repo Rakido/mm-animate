@@ -1,0 +1,78 @@
+# Easing Personnalisé
+
+import NxTextAnimation from '../../components/NxTextAnimation'
+
+## Utilisation des Easings GSAP
+
+L'easing de l'animation peut être personnalisé avec `data-easing` :
+
+```html
+<h3 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="slide"
+  data-easing="power2.inOut"
+>
+  Animation avec easing fluide
+</h3>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="slide"
+  data-easing="power2.inOut"
+>
+  Chaque lettre apparaît une par une
+</NxTextAnimation>
+
+---
+
+## Cubic-Bezier Personnalisé
+
+Pour un contrôle précis, utilisez des valeurs cubic-bezier personnalisées :
+
+```html
+<p 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="fade-in"
+  data-easing="0.7,0,0.3,1"
+>
+  Animation avec courbe d'easing personnalisée
+</p>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="slide"
+  data-easing="0.7,0,0.3,1"
+>
+  Chaque lettre apparaît une par une
+</NxTextAnimation>
+
+---
+
+## Easing SVG
+
+Il est possible d'utiliser des courbes SVG en easing :
+```html
+<h3 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="slide"
+  data-easing="M0,0 C0.769,-0.265 -0.021,0.933 0.24,1.081 0.56,1.261 0.696,1.001 1,1"
+>
+  Animation avec easing fluide
+</h3>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="slide"
+  data-easing="M0,0 C0.769,-0.265 -0.021,0.933 0.24,1.081 0.56,1.261 0.696,1.001 1,1"
+>
+  Chaque lettre apparaît une par une
+</NxTextAnimation>

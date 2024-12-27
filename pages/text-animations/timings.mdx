@@ -1,0 +1,58 @@
+# Contrôles de Timing
+
+import NxTextAnimation from '../../components/NxTextAnimation'
+
+## Effet de Décalage
+
+L'attribut `data-stagger` contrôle le délai entre l'animation de chaque caractère :
+
+```html
+<div 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="fade-in"
+  data-stagger="0.1"
+>
+  Les caractères s'animent avec 0.1s de délai entre chacun
+</div>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-animate="slide"
+  data-splitting="chars"
+  data-fade-start="0.1"
+  data-duration="1"
+  data-stagger=".5"
+>
+  Chaque lettre apparaît une par une
+</NxTextAnimation>
+
+---
+
+## Durée et Délai
+
+Contrôlez le timing global avec `data-duration` et `data-delay` :
+
+```html
+<span 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="fade-in"
+  data-duration="2"
+  data-delay="0.5"
+>
+  Animation plus lente qui commence après 0.5s
+</span>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-animate="slide"
+  data-splitting="chars"
+  data-fade-start="0.1"
+  data-duration="1"
+  data-delay="1"
+>
+  Chaque lettre apparaît une par une
+</NxTextAnimation>
