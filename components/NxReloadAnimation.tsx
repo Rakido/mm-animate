@@ -3,14 +3,19 @@ import { useCallback } from 'react'
 interface NxReloadAnimationProps {
   className?: string;
   targetRef: React.RefObject<HTMLElement>;
+  type?: 'text' | 'stagger';
 }
 
-export default function NxReloadAnimation({ className = '', targetRef }: NxReloadAnimationProps) {
+export default function NxReloadAnimation({ className = '', targetRef, type = 'text' }: NxReloadAnimationProps) {
   const handleReload = useCallback(() => {
-    if (typeof window !== 'undefined' && window.moonMoonText && targetRef.current) {
-      window.moonMoonText.initTextAnimation(targetRef.current);
+    if (typeof window !== 'undefined' && targetRef.current) {
+      if (type === 'stagger' && window.moonMoonStagger) {
+        window.moonMoonStagger.initStaggerAnimation(targetRef.current);
+      } else if (type === 'text' && window.moonMoonText) {
+        window.moonMoonText.initTextAnimation(targetRef.current);
+      }
     }
-  }, [targetRef]);
+  }, [targetRef, type]);
 
   return (
     <button

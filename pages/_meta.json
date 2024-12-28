@@ -1,7 +1,15 @@
 {
   "index": "Introduction",
-  "about": {
-    "title": "About",
-    "type": "page"
+  "text-animations": {
+    "title": "Text Animations",
+    "theme": {
+      "collapsed": true
+    }
+  },
+  "stagger-animations": {
+    "title": "Stagger Animations",
+    "theme": {
+      "collapsed": true
+    }
   }
 }

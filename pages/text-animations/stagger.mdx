@@ -1,0 +1,139 @@
+# Staggering
+
+Le staggering permet d'animer des éléments en séquence avec différentes méthodes de délai.
+
+import NxTextAnimation from '../../components/NxTextAnimation'
+
+## Méthodes de Stagger
+
+Il existe 4 méthodes différentes pour contrôler le stagger des animations :
+
+### 1. From Start
+
+La méthode par défaut, les éléments s'animent depuis le début avec un délai constant.
+
+```html
+<h2 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-stagger="0.05"
+  data-stagger-method="start"
+>
+  Animation depuis le début
+</h2>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-stagger="0.05"
+  data-stagger-method="start"
+  data-animate="fade-in"
+>
+  Animation depuis le début
+</NxTextAnimation>
+
+### 2. From Center
+
+Les éléments s'animent depuis le centre vers l'extérieur.
+
+```html
+<h2 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-stagger="0.05"
+  data-stagger-method="center"
+>
+  Animation depuis le centre
+</h2>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-stagger="0.05"
+  data-stagger-method="center"
+  data-animate="fade-in"
+>
+  Animation depuis le centre
+</NxTextAnimation>
+
+### 3. Random
+
+Les éléments s'animent dans un ordre aléatoire.
+
+```html
+<h2 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-stagger="0.05"
+  data-stagger-method="random"
+>
+  Animation aléatoire
+</h2>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-stagger="0.05"
+  data-stagger-method="random"
+  data-animate="fade-in"
+>
+  Animation aléatoire
+</NxTextAnimation>
+
+### 4. Edges
+
+Les éléments s'animent depuis les bords vers le centre.
+
+```html
+<h2 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-stagger="0.05"
+  data-stagger-method="end"
+>
+  Animation depuis les bords
+</h2>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-stagger="0.05"
+  data-stagger-method="enb"
+  data-animate="fade-in"
+>
+  Animation depuis les bords
+</NxTextAnimation>
+
+## Combinaison avec d'autres attributs
+
+Les méthodes de stagger peuvent être combinées avec d'autres attributs d'animation :
+
+```html
+<h2 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-stagger="0.05"
+  data-stagger-method="center"
+  data-animate="slide"
+  data-axis="y"
+  data-easing="elastic.out(1, 0.3)"
+>
+  Animation combinée
+</h2>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-stagger="0.05"
+  data-stagger-method="center"
+  data-animate="slide"
+  data-axis="y"
+  data-easing="elastic.out(1, 0.3)"
+>
+  Animation combinée
+</NxTextAnimation>

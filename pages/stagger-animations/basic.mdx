@@ -1,0 +1,39 @@
+# Les bases du Stagger
+
+import NxStaggerAnimation from '../../components/NxStaggerAnimation'
+
+Le stagger permet d'animer des éléments en séquence avec un délai entre chaque élément.
+
+## Configuration de base
+
+Pour créer une animation stagger, vous aurez besoin de :
+- `data-stagger-reveal` sur le conteneur parent
+- `data-stagger-item` sur chaque élément enfant
+
+<NxStaggerAnimation data-stagger-reveal>
+  {[1, 2, 3, 4].map((item) => (
+    <div 
+      key={item}
+      data-stagger-item
+      className="nx-bg-gray-700 nx-p-4 nx-rounded-lg nx-mb-4"
+    >
+      Item {item}
+    </div>
+  ))}
+</NxStaggerAnimation>
+## Contrôle du délai
+
+Utilisez `data-stagger` pour définir le délai entre chaque élément (en secondes) :
+
+<NxStaggerAnimation data-stagger-reveal data-stagger="0.2">
+  {[1, 2, 3, 4].map((item) => (
+    <div 
+      key={item}
+      data-stagger-item
+      className="nx-bg-gray-700 nx-p-4 nx-rounded-lg nx-mb-4"
+    >
+      Item {item}
+    </div>
+  ))}
+</NxStaggerAnimation>
+
