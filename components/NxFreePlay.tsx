@@ -94,7 +94,7 @@ export default function NxFreePlay() {
     setSplitting(randomSplitting)
     setAnimation(randomAnimation)
     setAxis(randomAxis)
-    setStagger(getRandomNumber(0.01, 0.5))
+    setStagger(getRandomNumber(0.01, 0.1))
     setDuration(getRandomNumber(0, 3))
     setRotate(getRandomNumber(-40, 40))
     setDelay('0')
