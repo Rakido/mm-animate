@@ -3,28 +3,31 @@ import NxReloadAnimation from './NxReloadAnimation'
 
 const EASING_OPTIONS = {
   'GSAP Defaults': {
-    'power1.out': 'power1.out',
-    'power2.out': 'power2.out',
-    'power3.out': 'power3.out',
-    'power4.out': 'power4.out'
+    'Power1 Out': 'power1.out',
+    'Power2 Out': 'power2.out',
+    'Power3 Out': 'power3.out',
+    'Power4 Out': 'power4.out'
   },
-  'Bounce': {
-    'bounce': 'bounce',
-    'bounce.in': 'bounce.in',
-    'bounce.out': 'bounce.out',
-    'bounce.inOut': 'bounce.inOut'
+  'Bounce & Elastic': {
+    'Bounce Out': 'bounce.out',
+    'Elastic Out': 'elastic.out(1, 0.3)',
+    'Back Out': 'back.out(1.7)'
   },
-  'Elastic': {
-    'elastic': 'elastic',
-    'elastic.out(1, 0.3)': 'elastic.out(1, 0.3)',
-    'elastic.in(1, 0.3)': 'elastic.in(1, 0.3)',
-    'elastic.inOut(1, 0.3)': 'elastic.inOut(1, 0.3)'
-  },
-  'Expo': {
-    'expo.out': 'expo.out',
-    'expo.in': 'expo.in',
-    'expo.inOut': 'expo.inOut'
+  'Custom Curves': {
+    'Moon Bounce': 'M0,0 C0.791,0.232 0.04,0.737 0.212,0.885 0.42,1.065 0.779,1.011 1,0.824',
+    'Slow Start': 'M0,0 C0.02,0.2 0.4,0.8 1,1',
+    'Quick Pause': 'M0,0 C0.4,0 0.5,0.8 1,1',
+    'Double Jump': 'M0,0 C0.5,0.5 0.7,0.1 0.8,0.8 0.9,1 1,1 1,1',
+    'Smooth Bounce': 'M0,0 C0.3,1 0.7,0.5 1,1',
+    'Elastic Snap': 'M0,0 C0.2,0 0.4,1.6 0.6,0.8 0.8,0.2 1,1 1,1'
   }
+}
+
+const formatHTMLAttributes = (attributes: Record<string, string | undefined>) => {
+  return Object.entries(attributes)
+    .filter(([_, value]) => value !== undefined)
+    .map(([key, value]) => `${key}="${value}"`)
+    .join(' ');
 }
 
 export default function NxFreePlay() {
@@ -67,21 +70,21 @@ export default function NxFreePlay() {
   // Function to generate random parameters
   const generateRandomParams = useCallback(() => {
     const randomText = getRandomItem([
-      "To the Moon and Beyond",
-      "Lunar Animations",
-      "Dancing with the Stars",
-      "Moonlight Magic",
-      "Cosmic Movements",
-      "Stellar Transitions",
-      "Eclipse Effects",
-      "Lunar Phase Shifts",
-      "Celestial Motion",
-      "Moon Dust Sparkles",
-      "Orbit Dynamics",
-      "Space Poetry"
+      "Un Voyage dans la Lune",
+      "La Lune nous Observe",
+      "Clair de Lune Magique",
+      "Danse avec les Étoiles",
+      "Au Clair de la Lune",
+      "L'Astre de la Nuit",
+      "Poussière d'Étoiles",
+      "Rêves Lunaires",
+      "Eclipse Enchantée",
+      "Phases de Lune",
+      "Voyage Cosmique",
+      "Magie Céleste"
     ])
 
-    const randomSplitting = getRandomItem(['chars', 'words', 'lines'])
+    const randomSplitting = getRandomItem(['chars', 'words'])
     const randomAnimation = getRandomItem(['fade-in', 'slide', 'shutter-word'])
     const randomAxis = getRandomItem(['x', 'x-', 'y', 'y-'])
     
@@ -91,9 +94,9 @@ export default function NxFreePlay() {
     setSplitting(randomSplitting)
     setAnimation(randomAnimation)
     setAxis(randomAxis)
-    setStagger(getRandomNumber(0.02, 0.2))
-    setDuration(getRandomNumber(0.5, 2))
-    setRotate(getRandomNumber(-20, 20, 0))
+    setStagger(getRandomNumber(0.01, 0.5))
+    setDuration(getRandomNumber(0, 3))
+    setRotate(getRandomNumber(-40, 40))
     setDelay('0')
   }, []);
 
@@ -112,6 +115,38 @@ export default function NxFreePlay() {
 
     initializeAnimation();
   }, [generateRandomParams, replayAnimation]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.CustomEase) {
+      // Register custom easing curves
+      Object.entries(EASING_OPTIONS['Custom Curves']).forEach(([name, path]) => {
+        const safeName = name.toLowerCase().replace(/\s+/g, '-');
+        window.CustomEase.create(safeName, path as string);
+      });
+    }
+  }, []);
+
+  const handleExportHTML = useCallback(() => {
+    const attributes = {
+      'data-scroll-text-reveal': 'true',
+      'data-splitting': splitting,
+      'data-animate': animation,
+      'data-easing': easing,
+      'data-stagger': stagger,
+      'data-duration': duration,
+      'data-rotate': rotate,
+      'data-delay': delay,
+      'data-axis': animation === 'slide' ? axis.charAt(0) : undefined,
+      'data-axis-value': animation === 'slide' ? (axis.includes('-') ? '-100%' : '100%') : undefined,
+      'data-color': animation === 'shutter-word' ? 'white' : undefined
+    };
+
+    const htmlCode = `<div ${formatHTMLAttributes(attributes)}>\n  ${text}\n</div>`;
+    
+    navigator.clipboard.writeText(htmlCode).then(() => {
+      alert('HTML code copied to clipboard!');
+    });
+  }, [text, splitting, animation, easing, stagger, duration, rotate, delay, axis]);
 
   return (
     <div className="nx-relative nx-w-full" onKeyDown={handleKeyPress}>
@@ -194,7 +229,6 @@ export default function NxFreePlay() {
                   >
                     <option value="chars">Characters</option>
                     <option value="words">Words</option>
-                    <option value="lines">Lines</option>
                   </select>
                 </div>
 
@@ -239,6 +273,7 @@ export default function NxFreePlay() {
                     className="nx-w-full nx-p-2 nx-rounded nx-bg-gray-800 nx-text-white nx-border nx-border-gray-700 focus:nx-border-blue-500 focus:nx-ring-1 focus:nx-ring-blue-500"
                     step="0.1"
                     min="0"
+                    max="5"
                   />
                 </div>
 
@@ -288,6 +323,7 @@ export default function NxFreePlay() {
                     className="nx-w-full nx-p-2 nx-rounded nx-bg-gray-800 nx-text-white nx-border nx-border-gray-700 focus:nx-border-blue-500 focus:nx-ring-1 focus:nx-ring-blue-500"
                     step="0.01"
                     min="0"
+                    max="1"
                   />
                 </div>
 
@@ -300,6 +336,8 @@ export default function NxFreePlay() {
                     onChange={(e) => setRotate(e.target.value)}
                     className="nx-w-full nx-p-2 nx-rounded nx-bg-gray-800 nx-text-white nx-border nx-border-gray-700 focus:nx-border-blue-500 focus:nx-ring-1 focus:nx-ring-blue-500"
                     step="1"
+                    min="-180"
+                    max="180"
                   />
                 </div>
 
@@ -325,6 +363,27 @@ export default function NxFreePlay() {
                     />
                   </svg>
                   Randomize
+                </button>
+
+                {/* Export HTML Button */}
+                <button
+                  onClick={handleExportHTML}
+                  className="nx-w-full nx-mt-4 nx-p-3 nx-bg-gray-800 hover:nx-bg-gray-700 nx-text-white nx-rounded-lg nx-transition-all nx-duration-200 nx-flex nx-items-center nx-justify-center nx-gap-2 nx-shadow-lg hover:nx-shadow-xl hover:nx-scale-[1.02] nx-font-medium nx-border nx-border-gray-700"
+                >
+                  <svg 
+                    className="nx-w-5 nx-h-5" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" 
+                    />
+                  </svg>
+                  Export HTML
                 </button>
               </div>
             </div>
