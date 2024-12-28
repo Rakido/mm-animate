@@ -1,0 +1,51 @@
+# Testez les Animations Stagger
+
+import NxStaggerFreePlay from '../../components/NxStaggerFreePlay'
+
+Expérimentez avec différentes animations stagger en temps réel. Modifiez le nombre d'éléments, les paramètres d'animation et utilisez le bouton de rechargement pour voir le résultat.
+
+<NxStaggerFreePlay />
+
+## Paramètres disponibles
+
+### Attributs principaux
+- `data-stagger-reveal`: Active l'animation stagger sur le conteneur
+- `data-stagger-item`: Marque chaque élément à animer
+
+### Animation
+- `data-animate`: Type d'animation ("fade-in", "slide", "scale")
+- `data-easing`: Fonction d'easing (ex: "power2.out", "elastic.out")
+- `data-duration`: Durée de l'animation en secondes
+- `data-delay`: Délai avant le début de l'animation
+- `data-stagger`: Délai entre chaque élément
+
+### Direction & Distance
+- `data-axis`: Direction du slide ("x", "y")
+- `data-axis-value`: Distance du slide (ex: "100%", "-100px")
+- `data-distance`: Distance personnalisée pour les animations
+
+### Transformations
+- `data-rotate`: Rotation en degrés
+- `data-scale`: Échelle de transformation (1 = taille normale)
+- `data-opacity`: Opacité de départ pour fade-in
+
+### Déclenchement
+- `data-scrub`: Active le scrubbing au scroll (true/false)
+- `data-start`: Point de départ du scroll trigger
+- `data-end`: Point de fin du scroll trigger
+
+### Exemple de code complet
+```html
+<div 
+  data-stagger-reveal
+  data-animate="slide"
+  data-axis="x"
+  data-stagger="0.1"
+  data-duration="1"
+  data-easing="elastic.out(1, 0.3)"
+>
+  <div data-stagger-item>Item 1</div>
+  <div data-stagger-item>Item 2</div>
+  <div data-stagger-item>Item 3</div>
+</div>
+``` 

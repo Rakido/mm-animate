@@ -1,0 +1,68 @@
+# Distances & Direction
+
+import NxStaggerAnimation from '../../components/NxStaggerAnimation'
+
+## Animation depuis une direction
+
+Utilisez `data-direction` pour définir la direction  :
+
+```html
+<ul 
+  data-stagger-reveal 
+  data-direction="x" 
+>
+  <li>Item 1</li>
+  <li>Item 2</li>
+  <li>Item 3</li>
+  <li>Item 4</li>
+</ul>
+```
+
+<NxStaggerAnimation 
+  data-stagger-reveal data-direction="x" data-distance="20"
+>
+  {[1, 2, 3, 4].map((item) => (
+    <div 
+      key={item}
+      className="nx-bg-gray-700 nx-p-4 nx-rounded-lg nx-mb-4"
+    >
+      Item {item}
+    </div>
+  ))}
+</NxStaggerAnimation>
+
+## Distance personnalisée
+
+Utilisez `data-distance` pour contrôler la distance de départ :
+
+```html
+<ul 
+  data-stagger-reveal 
+  data-stagger="0.1"
+  data-direction="x"
+  data-distance="260"
+  data-ease="elastic"
+>
+  <li>Item 1</li>
+  <li>Item 2</li>
+  <li>Item 3</li>
+  <li>Item 4</li>
+</ul>
+```
+
+<NxStaggerAnimation 
+  data-stagger-reveal 
+  data-stagger="0.1"
+  data-direction="x"
+  data-distance="260"
+  data-ease="elastic"
+>
+  {[1, 2, 3, 4].map((item) => (
+    <div 
+      key={item}
+      className="nx-bg-gray-700 nx-p-4 nx-rounded-lg nx-mb-4"
+    >
+      Item {item}
+    </div>
+  ))}
+</NxStaggerAnimation> 

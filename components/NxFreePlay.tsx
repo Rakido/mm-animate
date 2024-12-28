@@ -150,7 +150,11 @@ export default function NxFreePlay() {
 
   return (
     <div className="nx-relative nx-w-full" onKeyDown={handleKeyPress}>
-      <div className="nx-relative nx-my-8 nx-mx-auto nx-max-w-6xl nx-bg-gray-800 nx-rounded-xl nx-border nx-border-gray-700">
+      <div className="nx-relative nx-my-8 nx-mx-auto nx-max-w-6xl nx-bg-gray-800 nx-rounded-xl nx-border nx-border-gray-700"
+      style={{
+        overflow: 'hidden',
+      }}
+      >
         <div className="nx-grid nx-grid-cols-1 md:nx-grid-cols-2 nx-gap-0">
           {/* Animation Preview */}
           <div className="nx-relative nx-p-8 nx-min-h-[400px] nx-flex nx-items-center nx-justify-center nx-bg-gray-900">

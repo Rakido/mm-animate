@@ -1,0 +1,175 @@
+# Méthodes de Stagger
+
+import NxStaggerAnimation from '../../components/NxStaggerAnimation'
+
+Les animations stagger peuvent être contrôlées avec différentes méthodes pour créer des séquences variées.
+
+## Méthodes disponibles
+
+### 1. Start
+
+La méthode par défaut, les éléments s'animent en séquence depuis le début.
+
+```html
+<div 
+  data-stagger-reveal
+  data-stagger="0.1"
+  data-stagger-method="start"
+>
+  <div data-stagger-item>Item 1</div>
+  <div data-stagger-item>Item 2</div>
+  <div data-stagger-item>Item 3</div>
+</div>
+```
+
+<NxStaggerAnimation 
+  data-stagger-reveal
+  data-stagger="0.1"
+  data-stagger-method="start"
+>
+  {[1, 2, 3, 4].map((item) => (
+    <div 
+      key={item}
+      data-stagger-item
+      className="nx-bg-gray-700 nx-p-4 nx-rounded-lg nx-mb-4"
+    >
+      Item {item}
+    </div>
+  ))}
+</NxStaggerAnimation>
+
+### 2. Center
+
+Les éléments s'animent depuis le centre vers l'extérieur.
+
+```html
+<div 
+  data-stagger-reveal
+  data-stagger="0.1"
+  data-stagger-method="center"
+>
+  <div data-stagger-item>Item 1</div>
+  <div data-stagger-item>Item 2</div>
+  <div data-stagger-item>Item 3</div>
+</div>
+```
+
+<NxStaggerAnimation 
+  data-stagger-reveal
+  data-stagger="0.1"
+  data-stagger-method="center"
+>
+  {[1, 2, 3, 4].map((item) => (
+    <div 
+      key={item}
+      data-stagger-item
+      className="nx-bg-gray-700 nx-p-4 nx-rounded-lg nx-mb-4"
+    >
+      Item {item}
+    </div>
+  ))}
+</NxStaggerAnimation>
+
+### 3. Random
+
+Les éléments s'animent dans un ordre aléatoire.
+
+```html
+<div 
+  data-stagger-reveal
+  data-stagger="0.1"
+  data-stagger-method="random"
+>
+  <div data-stagger-item>Item 1</div>
+  <div data-stagger-item>Item 2</div>
+  <div data-stagger-item>Item 3</div>
+</div>
+```
+
+<NxStaggerAnimation 
+  data-stagger-reveal
+  data-stagger="0.1"
+  data-stagger-method="random"
+>
+  {[1, 2, 3, 4].map((item) => (
+    <div 
+      key={item}
+      data-stagger-item
+      className="nx-bg-gray-700 nx-p-4 nx-rounded-lg nx-mb-4"
+    >
+      Item {item}
+    </div>
+  ))}
+</NxStaggerAnimation>
+
+### 4. End
+
+Les éléments s'animent depuis la fin vers le début.
+
+```html
+<div 
+  data-stagger-reveal
+  data-stagger="0.1"
+  data-stagger-method="end"
+>
+  <div data-stagger-item>Item 1</div>
+  <div data-stagger-item>Item 2</div>
+  <div data-stagger-item>Item 3</div>
+</div>
+```
+
+<NxStaggerAnimation 
+  data-stagger-reveal
+  data-stagger="0.1"
+  data-stagger-method="end"
+>
+  {[1, 2, 3, 4].map((item) => (
+    <div 
+      key={item}
+      data-stagger-item
+      className="nx-bg-gray-700 nx-p-4 nx-rounded-lg nx-mb-4"
+    >
+      Item {item}
+    </div>
+  ))}
+</NxStaggerAnimation>
+
+## Combinaison avec d'autres effets
+
+Les méthodes de stagger peuvent être combinées avec différents types d'animations et paramètres :
+
+```html
+<div 
+  data-stagger-reveal
+  data-stagger="0.1"
+  data-stagger-method="center"
+  data-animate="slide"
+  data-direction="x"
+  data-distance="100"
+  data-easing="elastic.out(1, 0.3)"
+>
+  <div data-stagger-item>Item 1</div>
+  <div data-stagger-item>Item 2</div>
+  <div data-stagger-item>Item 3</div>
+</div>
+```
+
+<NxStaggerAnimation 
+  data-stagger-reveal
+  data-stagger="0.1"
+  data-stagger-method="center"
+  data-animate="slide"
+  data-direction="x"
+  data-distance="100"
+  data-easing="elastic.out(1, 0.3)"
+>
+  {[1, 2, 3, 4].map((item) => (
+    <div 
+      key={item}
+      data-stagger-item
+      className="nx-bg-gray-700 nx-p-4 nx-rounded-lg nx-mb-4"
+    >
+      Item {item}
+    </div>
+  ))}
+</NxStaggerAnimation> 
