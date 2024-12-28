@@ -3,6 +3,7 @@ import NxReloadAnimation from './NxReloadAnimation'
 
 interface NxTextAnimationProps {
   children: React.ReactNode;
+  className?: string;
   [key: string]: any;
 }
 
@@ -16,9 +17,8 @@ declare global {
   }
 }
 
-export default function NxTextAnimation({ children, ...props }: NxTextAnimationProps) {
+export default function NxTextAnimation({ children, className = '', ...props }: NxTextAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const scriptsLoadedRef = useRef(false)
 
   useEffect(() => {
     const loadScript = (src: string): Promise<void> => {
@@ -39,47 +39,15 @@ export default function NxTextAnimation({ children, ...props }: NxTextAnimationP
     };
 
     const initAnimation = async () => {
-      if (scriptsLoadedRef.current) {
-        if (window.moonMoonText && containerRef.current) {
-          window.moonMoonText.initTextAnimation(containerRef.current);
-        }
-        return;
-      }
-
       try {
-        // Load GSAP core first
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
-        
-        // Wait a bit to ensure GSAP is initialized
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        // Load GSAP plugins
-        await Promise.all([
-          loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js'),
-          loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js')
-        ]);
-        
-        // Load SplitType
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
         await loadScript('https://unpkg.com/split-type');
-        
-        // Wait for SplitType to be available
-        await new Promise(resolve => {
-          const checkSplitType = setInterval(() => {
-            if (window.SplitType) {
-              clearInterval(checkSplitType);
-              resolve(true);
-            }
-          }, 50);
-        });
-
-        // Finally load MoonMoonText
         await loadScript('https://lefutoir.fr/lib/mm-text-animation.js');
 
-        scriptsLoadedRef.current = true;
-
-        // Initialize after all scripts are loaded
         if (window.moonMoonText && containerRef.current) {
-          window.moonMoonText.initTextAnimation(containerRef.current);
+          window.moonMoonText.initTextAnimation(containerRef.current as HTMLElement);
         }
       } catch (error) {
         console.error('Error loading animation scripts:', error);
@@ -87,10 +55,6 @@ export default function NxTextAnimation({ children, ...props }: NxTextAnimationP
     };
 
     initAnimation();
-
-    return () => {
-      // Cleanup handled by the library
-    };
   }, []);
 
   return (

@@ -18,7 +18,6 @@ declare global {
 
 export default function NxStaggerAnimation({ children, className = '', ...props }: NxStaggerAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const scriptsLoadedRef = useRef(false)
 
   useEffect(() => {
     const loadScript = (src: string): Promise<void> => {
@@ -39,34 +38,14 @@ export default function NxStaggerAnimation({ children, className = '', ...props 
     };
 
     const initAnimation = async () => {
-      if (scriptsLoadedRef.current) {
-        if (window.moonMoonStagger && containerRef.current) {
-          window.moonMoonStagger.initStaggerAnimation(containerRef.current);
-        }
-        return;
-      }
-
       try {
-        // Load GSAP core first
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
-        
-        // Wait a bit to ensure GSAP is initialized
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        // Load GSAP plugins
-        await Promise.all([
-          loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js'),
-          loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js')
-        ]);
-
-        // Finally load MoonMoonStagger
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
         await loadScript('https://lefutoir.fr/lib/mm-stagger-animation.js');
 
-        scriptsLoadedRef.current = true;
-
-        // Initialize after all scripts are loaded
         if (window.moonMoonStagger && containerRef.current) {
-          window.moonMoonStagger.initStaggerAnimation(containerRef.current);
+          window.moonMoonStagger.initStaggerAnimation(containerRef.current as HTMLElement);
         }
       } catch (error) {
         console.error('Error loading animation scripts:', error);
@@ -74,10 +53,6 @@ export default function NxStaggerAnimation({ children, className = '', ...props 
     };
 
     initAnimation();
-
-    return () => {
-      // Cleanup handled by the library
-    };
   }, []);
 
   return (
