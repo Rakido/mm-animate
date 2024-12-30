@@ -25,7 +25,7 @@ L'attribut `data-scrub` permet de déclencher les animations lors du scroll :
   data-stagger="0.1"
   data-scrub="true"
 >
-  Chaque lettre apparaît une par une
+  Les caractères réagissent au scroll
 </NxTextAnimation>
 
 ---
@@ -55,3 +55,36 @@ En passant une valeur à `data-scrub` on peux ajuster le scroll de l'animation :
 >
   Les caractères réagissent au scroll
 </NxTextAnimation>
+
+---
+
+## Scroll avec un easing
+
+```html
+<div 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="slide"
+  data-easing="elastic.out(1, 0.3)"
+  data-scrub="2"
+>
+  Les caractères s'animent avec un easing
+</div>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="slide"
+  data-easing="elastic.out(1, 0.3)"
+  data-scrub="2"
+>
+  Les caractères s'animent avec un easing
+</NxTextAnimation>
+
+
+
+---
+
+## Scroll avec un délai
+

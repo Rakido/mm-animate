@@ -6,6 +6,8 @@ import NxTextAnimation from '../../components/NxTextAnimation'
 
 L'animation la plus simple est le fondu. Vous pouvez contrôler l'opacité de départ avec `data-fade-start`.
 
+La vitesse d'animation entre les caractères est contrôlée par `data-stagger`.
+
 ```html
 <p 
   data-scroll-text-reveal 
@@ -15,7 +17,7 @@ L'animation la plus simple est le fondu. Vous pouvez contrôler l'opacité de d�
   data-duration="0.1"
   data-stagger="0.03"
 >
-  Chaque caractère apparaît en séquence
+  Chaque caractère s'anime de 0.1 opacité à 1
 </p>
 ```
 
@@ -27,7 +29,7 @@ L'animation la plus simple est le fondu. Vous pouvez contrôler l'opacité de d�
   data-duration=".1"
   data-stagger="0.03"
 >
-  Chaque lettre apparaît une par une
+  Chaque caractère s'anime de 0.1 opacité à 1
 </NxTextAnimation>
 
 
@@ -46,7 +48,7 @@ Les caractères peuvent glisser depuis n'importe quelle direction en utilisant l
   data-duration="1.2"
   data-stagger="0.03"
 >
-  Caractères glissant depuis le bas
+  Chaque lettre apparaît depuis le bas
 </h2>
 ```
 
@@ -56,81 +58,15 @@ Valeurs d'axe disponibles :
 - `y` - Glissement depuis le bas
 - `-y` - Glissement depuis le haut
 
-Les valeurs de départs peuvent être controlées avec `data-axis-value` et une valeur en pixel ou pourcentage.
-
 <NxTextAnimation 
   data-scroll-text-reveal 
+  data-splitting="chars"
   data-animate="slide"
-  data-splitting="chars"
-  data-fade-start="0.1"
-  data-duration="1"
-  data-stagger="0.05"
->
-  Chaque lettre apparaît une par une
-</NxTextAnimation>
-
----
-
-## Combinaison d'Animations
-
-Plusieurs effets d'animation peuvent être combinés :
-
-```html
-<h1 
-  data-scroll-text-reveal 
-  data-splitting="chars"
-  data-animate="fade-in slide"
   data-axis="y"
-  data-stagger="0.04"
-  data-duration="1.5"
->
-  Combinaison de fondu et glissement
-</h1>
-```
-
----
-
-## Bonnes Pratiques
-
-1. **Performance** : Gardez les valeurs `data-stagger` petites (0.02-0.1s) pour des animations plus fluides
-2. **Lisibilité** : Pour les blocs de texte plus longs, préférez le découpage en `words` plutôt qu'en `chars`
-3. **Timing** : Ajustez `data-duration` en fonction de la longueur du texte - un texte plus long peut nécessiter une durée plus longue
-4. **Déclenchement au Défilement** : Les animations se déclenchent automatiquement lorsque les éléments entrent dans le viewport
-
-N'oubliez pas que toutes les animations de caractères sont déclenchées au défilement par défaut, s'activant lorsque l'élément entre dans le viewport et s'inversant lorsqu'il en sort.
-
-
-## Animation Simple
-
-<NxTextAnimation 
-  data-scroll-text-reveal 
-  data-animate="fade-in"
-  data-splitting="chars"
-  data-stagger="0.05"
->
-  Chaque lettre apparaît une par une
-</NxTextAnimation>
-
-## Slide depuis la Droite
-
-<NxTextAnimation 
-  data-scroll-text-reveal 
-  data-animate="slide"
-  data-splitting="chars"
-  data-axis="x"
+  data-duration="1.2"
   data-stagger="0.03"
 >
-  Les lettres glissent de la droite
+  Chaque lettre apparaît depuis le bas
 </NxTextAnimation>
 
-## Animation Combinée
-
-<NxTextAnimation 
-  data-scroll-text-reveal 
-  data-animate="fade-in slide"
-  data-splitting="chars"
-  data-axis="y"
-  data-stagger="0.04"
->
-  Fondu et glissement par caractère
-</NxTextAnimation> 
+---

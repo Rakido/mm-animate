@@ -25,7 +25,7 @@ L'attribut `data-rotate` donne une rotation de départ aux éléments :
   data-stagger="0.1"
   data-rotate="40"
 >
-  Chaque lettre apparaît une par une
+  Les caractères s'animent avec 40° de rotation au départ
 </NxTextAnimation>
 
 ---
@@ -53,5 +53,35 @@ L'attribut `data-skew` donne une inclinaison de départ aux éléments :
   data-stagger="0.1"
   data-skew="40"
 >
-  Chaque lettre apparaît une par une
+  Les caractères s'animent avec 40° d'inclinaison au départ
+</NxTextAnimation>
+
+---
+
+## Combinaison
+
+Les deux attributs `data-rotate` et `data-skew` peuvent être utilisés ensemble :
+
+```html
+<div 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="slide"
+  data-stagger="0.1"
+  data-skew="90"
+  data-rotate="20"
+>
+  Les caractères s'animent avec 40° d'inclinaison et 20° de rotation
+</div>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="slide"
+  data-stagger="0.1"
+  data-skew="90"
+  data-rotate="20"
+>
+  Les caractères s'animent avec 40° d'inclinaison et 20° de rotation
 </NxTextAnimation>

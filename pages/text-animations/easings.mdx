@@ -6,14 +6,28 @@ import NxTextAnimation from '../../components/NxTextAnimation'
 
 L'easing de l'animation peut être personnalisé avec `data-easing` :
 
+Les courbes d'easing GSAP les plus courantes sont :
+
+- `power1.out` : Accélération douce
+- `power2.inOut` : Accélération et décélération modérées
+- `power3.in` : Démarrage lent puis accélération forte
+- `back.out` : Effet de rebond léger à la fin
+- `elastic.out` : Effet élastique oscillant
+
+Pour plus de détails sur les easings disponibles, consultez la [documentation GSAP](https://gsap.com/docs/v3/Eases/).
+
+
+Voici un exemple avec elastic.out :
+
+
 ```html
 <h3 
   data-scroll-text-reveal 
   data-splitting="chars"
   data-animate="slide"
-  data-easing="power2.inOut"
+  data-easing="elastic.out"
 >
-  Animation avec easing fluide
+  Animation en easing elastic.out
 </h3>
 ```
 
@@ -21,9 +35,9 @@ L'easing de l'animation peut être personnalisé avec `data-easing` :
   data-scroll-text-reveal 
   data-splitting="chars"
   data-animate="slide"
-  data-easing="power2.inOut"
+  data-easing="elastic.out"
 >
-  Chaque lettre apparaît une par une
+  Animation en easing elastic.out
 </NxTextAnimation>
 
 ---
@@ -49,7 +63,7 @@ Pour un contrôle précis, utilisez des valeurs cubic-bezier personnalisées :
   data-animate="slide"
   data-easing="0.7,0,0.3,1"
 >
-  Chaque lettre apparaît une par une
+  Animation avec courbe d'easing personnalisée
 </NxTextAnimation>
 
 ---
@@ -57,6 +71,7 @@ Pour un contrôle précis, utilisez des valeurs cubic-bezier personnalisées :
 ## Easing SVG
 
 Il est possible d'utiliser des courbes SVG en easing :
+
 ```html
 <h3 
   data-scroll-text-reveal 
@@ -64,7 +79,7 @@ Il est possible d'utiliser des courbes SVG en easing :
   data-animate="slide"
   data-easing="M0,0 C0.769,-0.265 -0.021,0.933 0.24,1.081 0.56,1.261 0.696,1.001 1,1"
 >
-  Animation avec easing fluide
+  Animation avec un easing SVG
 </h3>
 ```
 
@@ -74,5 +89,5 @@ Il est possible d'utiliser des courbes SVG en easing :
   data-animate="slide"
   data-easing="M0,0 C0.769,-0.265 -0.021,0.933 0.24,1.081 0.56,1.261 0.696,1.001 1,1"
 >
-  Chaque lettre apparaît une par une
+  Animation avec un easing SVG
 </NxTextAnimation>

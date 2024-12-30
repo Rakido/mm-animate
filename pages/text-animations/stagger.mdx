@@ -8,7 +8,7 @@ import NxTextAnimation from '../../components/NxTextAnimation'
 
 Il existe 4 méthodes différentes pour contrôler le stagger des animations :
 
-### 1. From Start
+### From Start
 
 La méthode par défaut, les éléments s'animent depuis le début avec un délai constant.
 
@@ -33,7 +33,7 @@ La méthode par défaut, les éléments s'animent depuis le début avec un déla
   Animation depuis le début
 </NxTextAnimation>
 
-### 2. From Center
+### From Center
 
 Les éléments s'animent depuis le centre vers l'extérieur.
 
@@ -58,7 +58,7 @@ Les éléments s'animent depuis le centre vers l'extérieur.
   Animation depuis le centre
 </NxTextAnimation>
 
-### 3. Random
+### Random
 
 Les éléments s'animent dans un ordre aléatoire.
 
@@ -83,9 +83,9 @@ Les éléments s'animent dans un ordre aléatoire.
   Animation aléatoire
 </NxTextAnimation>
 
-### 4. Edges
+### End
 
-Les éléments s'animent depuis les bords vers le centre.
+Les éléments s'animent depuis la fin vers le début.
 
 ```html
 <h2 
@@ -94,7 +94,7 @@ Les éléments s'animent depuis les bords vers le centre.
   data-stagger="0.05"
   data-stagger-method="end"
 >
-  Animation depuis les bords
+  Animation depuis la fin vers le début
 </h2>
 ```
 
@@ -105,8 +105,10 @@ Les éléments s'animent depuis les bords vers le centre.
   data-stagger-method="enb"
   data-animate="fade-in"
 >
-  Animation depuis les bords
+  Animation depuis la fin vers le début
 </NxTextAnimation>
+
+--- 
 
 ## Combinaison avec d'autres attributs
 
@@ -116,7 +118,7 @@ Les méthodes de stagger peuvent être combinées avec d'autres attributs d'anim
 <h2 
   data-scroll-text-reveal 
   data-splitting="chars"
-  data-stagger="0.05"
+  data-stagger="0.02"
   data-stagger-method="center"
   data-animate="slide"
   data-axis="y"
@@ -129,7 +131,7 @@ Les méthodes de stagger peuvent être combinées avec d'autres attributs d'anim
 <NxTextAnimation 
   data-scroll-text-reveal 
   data-splitting="chars"
-  data-stagger="0.05"
+  data-stagger="0.02"
   data-stagger-method="center"
   data-animate="slide"
   data-axis="y"

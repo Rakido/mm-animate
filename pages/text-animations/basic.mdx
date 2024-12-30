@@ -12,7 +12,7 @@ Pour animer un texte, vous aurez besoin de deux attributs principaux : `data-scr
   data-splitting="chars"
   data-animate="fade-in"
 >
-  Animer chaque caractère
+  Ici l'animation est appliquée à chaque caractère
 </h1>
 ```
 
@@ -23,76 +23,8 @@ L'attribut `data-scroll-text-reveal` initialise le système d'animation, tandis 
   data-animate="fade-in"
   data-splitting="chars"
 >
-  Chaque lettre apparaît une par une
+  Ici l'animation est appliquée à chaque caractère
 </NxTextAnimation>
 
 ---
 
-## Types d'Animation
-
-### Animation en Fondu
-
-L'animation la plus simple est le fondu. Vous pouvez contrôler l'opacité de départ avec `data-fade-start`.
-
-```html
-<p 
-  data-scroll-text-reveal 
-  data-splitting="chars"
-  data-animate="fade-in"
-  data-fade-start="0.1"
-  data-duration="0.1"
-  data-stagger="0.03"
->
-  Chaque caractère apparaît en séquence
-</p>
-```
-
-<NxTextAnimation 
-  data-scroll-text-reveal 
-  data-animate="fade-in"
-  data-splitting="chars"
-  data-fade-start="0.1"
-  data-duration=".1"
-  data-stagger="0.03"
->
-  Chaque lettre apparaît une par une
-</NxTextAnimation>
-
-
----
-
-### Animation en Glissement
-
-Les caractères peuvent glisser depuis n'importe quelle direction en utilisant le type d'animation `slide` avec `data-axis`.
-
-```html
-<h2 
-  data-scroll-text-reveal 
-  data-splitting="chars"
-  data-animate="slide"
-  data-axis="y"
-  data-duration="1.2"
-  data-stagger="0.03"
->
-  Caractères glissant depuis le bas
-</h2>
-```
-
-Valeurs d'axe disponibles :
-- `x` - Glissement depuis la droite
-- `-x` - Glissement depuis la gauche
-- `y` - Glissement depuis le bas
-- `-y` - Glissement depuis le haut
-
-<NxTextAnimation 
-  data-scroll-text-reveal 
-  data-splitting="chars"
-  data-animate="slide"
-  data-axis="y"
-  data-duration="1.2"
-  data-stagger="0.03"
->
-  Chaque lettre apparaît une par une
-</NxTextAnimation>
-
----

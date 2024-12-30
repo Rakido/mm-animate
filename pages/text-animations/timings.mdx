@@ -9,11 +9,11 @@ L'attribut `data-stagger` contrôle le délai entre l'animation de chaque caract
 ```html
 <div 
   data-scroll-text-reveal 
+  data-animate="slide"
   data-splitting="chars"
-  data-animate="fade-in"
-  data-stagger="0.1"
+  data-stagger="0.5"
 >
-  Les caractères s'animent avec 0.1s de délai entre chacun
+  Les caractères s'animent lentement
 </div>
 ```
 
@@ -21,11 +21,29 @@ L'attribut `data-stagger` contrôle le délai entre l'animation de chaque caract
   data-scroll-text-reveal 
   data-animate="slide"
   data-splitting="chars"
-  data-fade-start="0.1"
-  data-duration="1"
-  data-stagger=".5"
+  data-stagger="0.5"
 >
-  Chaque lettre apparaît une par une
+  Les caractères s'animent lentement
+</NxTextAnimation>
+
+```html
+<div 
+  data-scroll-text-reveal 
+  data-animate="slide"
+  data-splitting="chars"
+  data-stagger="0.02"
+>
+  Les caractères s'animent vite
+</div>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-animate="slide"
+  data-splitting="chars"
+  data-stagger="0.02"
+>
+  Les caractères s'animent vite
 </NxTextAnimation>
 
 ---
@@ -38,11 +56,11 @@ Contrôlez le timing global avec `data-duration` et `data-delay` :
 <span 
   data-scroll-text-reveal 
   data-splitting="chars"
-  data-animate="fade-in"
-  data-duration="2"
-  data-delay="0.5"
+  data-animate="slide"
+  data-duration="5"
+  data-delay="1"
 >
-  Animation plus lente qui commence après 0.5s
+  Animation très lente qui commence après 1s
 </span>
 ```
 
@@ -50,9 +68,8 @@ Contrôlez le timing global avec `data-duration` et `data-delay` :
   data-scroll-text-reveal 
   data-animate="slide"
   data-splitting="chars"
-  data-fade-start="0.1"
-  data-duration="1"
+  data-duration="5"
   data-delay="1"
 >
-  Chaque lettre apparaît une par une
+  Animation très lente qui commence après 1s
 </NxTextAnimation>

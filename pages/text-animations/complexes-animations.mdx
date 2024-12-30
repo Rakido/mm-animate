@@ -5,8 +5,8 @@ import NxTextAnimation from '../../components/NxTextAnimation'
 ## Animation en volet
 
 Une animation en volet peux être déclenchée avec `data-animate="shutter-word"`.
-La couleur de départ est gérée par `data-color`.  
-L'axe est géré par `data-axis`.
+
+La couleur de départ est gérée par `data-color`. L'axe est géré par `data-axis`.
 ```html
 <h3 
   data-scroll-text-reveal 
@@ -15,7 +15,7 @@ L'axe est géré par `data-axis`.
   data-axis="-x" 
   data-color="#0000ff"
 >
-  Animation en volet
+  Exemple d'animation en volet
 </h3>
 ```
 
@@ -38,11 +38,13 @@ Plusieurs effets d'animation peuvent être combinés :
 ```html
 <h1 
   data-scroll-text-reveal 
-  data-splitting="words"
-  data-animate="fade-in slide"
-  data-axis="-y"
+  data-splitting="chars"
+  data-animate="slide fade-in"
+  data-axis="y"
+  data-easing="elastic.out(1, 0.3)"
   data-skew="20"
-  data-stagger="0.04" 
+  data-rotate="200"
+  data-stagger="0.01" 
   data-duration="1.5"
 >
   Combinaison de fondu et glissement
@@ -51,11 +53,13 @@ Plusieurs effets d'animation peuvent être combinés :
 
 <NxTextAnimation 
   data-scroll-text-reveal 
-  data-splitting="words"
-  data-animate="fade-in slide"
+  data-splitting="chars"
+  data-animate="slide fade-in"
   data-axis="y"
+  data-easing="elastic.out(1, 0.3)"
   data-skew="20"
-  data-stagger="0.04" 
+  data-rotate="200"
+  data-stagger="0.01" 
   data-duration="1.5"
 >
   Combinaison de fondu et glissement
