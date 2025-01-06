@@ -1,0 +1,57 @@
+# Transformations
+
+import NxParallaxAnimation from '../../components/NxParallaxAnimation'
+
+## Directions
+
+Le paramètre `data-parallax-direction` permet de définir la direction de l'animation.
+- `y` : l'image se déplace de haut en bas
+- `-y` : l'image se déplace de bas en haut
+- `x` : l'image se déplace de droite à gauche
+- `-x` : l'image se déplace de gauche à droite
+
+
+```html
+<div data-parallax 
+     data-image-parallax 
+     data-parallax-direction="-y"
+  >
+  <img 
+    src="image.jpg" 
+  />
+</div>
+```
+
+<NxParallaxAnimation 
+  src="https://picsum.photos/1200/800"
+  imageFull
+  data-parallax
+  data-image-parallax
+  data-parallax-direction="x"
+/>
+
+--- 
+
+## Zoom
+Le paramètre `data-zoom=true` permet de zoomer l'image au scroll. 
+Il est accompagné du paramètre `data-zoom-percentage` qui permet de définir le pourcentage. Par défaut, il est de 1.5.
+
+```html
+<div data-parallax 
+     data-image-parallax
+     data-zoom="true" 
+  >
+  <img 
+    src="image.jpg" 
+  />
+</div>
+```
+
+<NxParallaxAnimation 
+  src="https://picsum.photos/1200/800"
+  imageFull
+  data-parallax
+  data-image-parallax
+  data-zoom="true"
+  data-zoom-percentage="2.5"
+/>

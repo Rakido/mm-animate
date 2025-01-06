@@ -1,0 +1,27 @@
+# Parallax de base
+
+import NxParallaxAnimation from '../../components/NxParallaxAnimation'
+
+## Animation de base
+
+Le parallax permet d'animer des images avec un effet de profondeur au scroll.
+
+Pour créer une animation parallax, vous aurez besoin de :
+- `data-parallax` sur le conteneur
+- `data-image-parallax` sur le conteneur
+
+```html
+<div data-parallax 
+     data-image-parallax >
+  <img 
+    src="image.jpg" 
+  />
+</div>
+```
+
+<NxParallaxAnimation 
+  src="https://picsum.photos/1200/800"
+  imageFull
+  data-parallax
+  data-image-parallax
+/>

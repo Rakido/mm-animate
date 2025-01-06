@@ -1,0 +1,86 @@
+# Animations de petits éléments
+import NxParallaxAnimation from '../../components/NxParallaxAnimation'
+
+## Principe
+
+Le parallax permet de prendre la main sur la vitesse de défilement d'éléments.
+
+Pour créer une animation parallax, vous aurez besoin de :
+- `data-parallax` sur l'élément
+- `data-parallax-direction` sur l'élément
+- `data-speed` sur l'élément
+
+Le parent doit être en `position: relative`.
+
+```html
+<div>
+  <img 
+      src="https://picsum.photos/200/200?1" 
+      data-parallax 
+      data-parallax-direction="y" 
+      data-speed="0.5" 
+  >
+</div>
+```
+
+<NxParallaxAnimation 
+  src="https://picsum.photos/200/200"
+  data-parallax
+  data-parallax-direction="y" 
+  data-speed="0.5" 
+  data-scrub="true"
+/>
+
+--- 
+
+## Vitesse
+
+La vitesse est reliée est contrôlée par le paramètre `data-speed`. Par défaut, elle est de 0.5.
+
+```html
+<div>
+  <img 
+      src="https://picsum.photos/200/200?1" 
+      data-parallax 
+      data-parallax-direction="y" 
+      data-speed="10" 
+  >
+</div>
+```
+
+<NxParallaxAnimation 
+  src="https://picsum.photos/200/200"
+  data-parallax
+  data-parallax-direction="y" 
+  data-speed="10" 
+  data-scrub="true"
+/>
+
+
+
+## Directions
+
+Différentes directions d'animations sont possibles :
+- `y` : l'élément se déplace de haut en bas
+- `-y` : l'élément se déplace de bas en haut
+- `x` : l'élément se déplace de gauche à droite
+- `-x` : l'élément se déplace de droite à gauche
+
+```html
+<div>
+  <img 
+      src="https://picsum.photos/200/200?1" 
+      data-parallax 
+      data-parallax-direction="y" 
+      data-speed="0.5" 
+  >
+</div>
+```
+
+<NxParallaxAnimation 
+  src="https://picsum.photos/200/200"
+  data-parallax
+  data-parallax-direction="x" 
+  data-speed="0.5" 
+  data-scrub="true"
+/>

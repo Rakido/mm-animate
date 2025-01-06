@@ -11,5 +11,11 @@
     "theme": {
       "collapsed": true
     }
+  },
+  "parallax-animations": {
+    "title": "Parallax Animations",
+    "theme": {
+      "collapsed": true
+    }
   }
 }
