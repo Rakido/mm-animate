@@ -1,6 +1,7 @@
 # Transformations
 
 import NxStaggerAnimation from '../../components/NxStaggerAnimation'
+import NxStaggerCardsAnimation from '../../components/NxStaggerCardsAnimation'
 
 ## Rotation
 
@@ -39,18 +40,21 @@ Ajoutez une rotation avec `data-rotate` :
 
 Utilisez `data-scale` pour une animation d'échelle, la valeur spécifiée est la valeur de début de l'animation :
 
-<NxStaggerAnimation 
+```html
+<ul 
   data-stagger-reveal 
-  data-stagger="0.1"
-  data-scale="0"
+  data-animate="slide"
+  data-direction="-y"
+  data-scale="0.5"
 >
-  {[1, 2, 3, 4].map((item) => (
-    <div 
-      key={item}
-      data-stagger-item
-      className="nx-bg-gray-700 nx-p-4 nx-rounded-lg nx-mb-4"
-    >
-      Item {item}
-    </div>
-  ))}
-</NxStaggerAnimation> 
+  <li></li>
+  <li></li>
+  <li></li>
+</ul>
+```
+
+<NxStaggerCardsAnimation 
+  data-animate="slide"
+  data-direction="-y"
+  data-scale="0.5"
+/>
