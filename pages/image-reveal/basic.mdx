@@ -18,7 +18,12 @@ Pour créer une animation de révélation d'image, vous aurez besoin de deux att
 .reveal {
   position: relative;
   overflow: hidden;
-  clip-path: inset(0% 0% 0% 0%);
+}
+
+.reveal img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 ```
 
