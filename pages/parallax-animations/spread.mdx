@@ -1,4 +1,109 @@
 # Éclatement d'images
 
-import NxParallaxAnimation from '../../components/NxParallaxAnimation'
+import NxParallaxSpread from '../../components/NxParallaxSpread'
 
+## Structure
+
+Il est possible d'épingler des éléments et de les animer au scroll.
+
+La propriété `data-parallax-pin` permet de spécifier l'angle de l'élément à épingler.
+
+```html
+<div class="parallax-wrapper">
+    <!-- Center image -->
+    <img 
+        src="https://picsum.photos/200/200?4" 
+        data-parallax 
+        data-parallax-direction="xy" 
+        data-speed="0.3"
+        data-scrub="1"
+        class="parallax-element"
+        alt="Center Image"
+    >
+    <!-- Top Left -->
+    <img 
+        src="https://picsum.photos/200/200?5" 
+        data-parallax 
+        data-parallax-pin="top-left"
+        data-speed="0.9"
+        data-scrub="0.6"
+        class="parallax-element"
+        alt="Top Left Image"
+    >
+    <!-- Top Right -->
+    <img 
+        src="https://picsum.photos/200/200?6" 
+        data-parallax 
+        data-parallax-pin="top-right"
+        data-speed="0.6"
+        data-scrub="1.2"
+        class="parallax-element"
+        alt="Top Right Image"
+    >
+    <!-- Bottom Left -->
+    <img 
+        src="https://picsum.photos/200/200?7" 
+        data-parallax 
+        data-parallax-pin="bottom-left"
+        data-speed="0.8"
+        data-scrub="1.2"
+        class="parallax-element"
+        alt="Bottom Left Image"
+    >
+    <!-- Bottom Right -->
+    <img 
+        src="https://picsum.photos/200/200?8" 
+        data-parallax 
+        data-parallax-pin="bottom-right"
+        data-speed="0.5"
+        data-scrub="0.7"
+        class="parallax-element"
+        alt="Bottom Right Image"
+    >
+</div>
+<div class="description">
+    Corner Pin Parallax
+</div>
+```
+
+<NxParallaxSpread
+  height={800}
+  images={[
+    {
+      src: "https://picsum.photos/200/200?4",
+      pin: "center",
+      "data-parallax": true,
+      "data-parallax-direction": "xy",
+      "data-speed": 0.3,
+      "data-scrub": 1
+    },
+    {
+      src: "https://picsum.photos/200/200?5",
+      pin: "top-left",
+      "data-parallax": true,
+      "data-speed": 0.9,
+      "data-scrub": 0.6
+    },
+    {
+      src: "https://picsum.photos/200/200?6",
+      pin: "top-right",
+      "data-parallax": true,
+      "data-speed": 0.6,
+      "data-scrub": 1.2
+    },
+    {
+      src: "https://picsum.photos/200/200?7",
+      pin: "bottom-left",
+      "data-parallax": true,
+      "data-speed": 0.8,
+      "data-scrub": 1.2
+    },
+    {
+      src: "https://picsum.photos/200/200?8",
+      pin: "bottom-right",
+      "data-parallax": true,
+      "data-speed": 0.5,
+      "data-scrub": 0.7
+    }
+  ]}
+/>

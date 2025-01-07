@@ -16,4 +16,39 @@ html.lenis {
 
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
+}
+
+/* Parallax Spread Styles */
+[data-parallax-pin] {
+  transform-origin: center center;
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+[data-parallax-pin="top-left"] {
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+[data-parallax-pin="top-right"] {
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+[data-parallax-pin="bottom-left"] {
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+[data-parallax-pin="bottom-right"] {
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+[data-parallax-pin="center"] {
+  transform: translate3d(-50%, -50%, 0) scale(1);
+}
+
+.parallax-wrapper {
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  perspective: 1000px;
 } 
