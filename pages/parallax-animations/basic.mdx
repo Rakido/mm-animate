@@ -11,12 +11,22 @@ Pour créer une animation parallax, vous aurez besoin de :
 - `data-image-parallax` sur le conteneur
 
 ```html
-<div data-parallax 
+<div class="parallax-container"
+data-parallax 
      data-image-parallax >
   <img 
     src="image.jpg" 
   />
 </div>
+```
+
+## Nécessite du CSS
+
+```css
+.parallax-container {
+  position: relative;
+  overflow: hidden;
+}
 ```
 
 <NxParallaxAnimation 
