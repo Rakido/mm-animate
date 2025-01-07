@@ -3,6 +3,11 @@ import { useEffect, useRef } from 'react'
 interface NxParallaxAnimationProps {
   src: string;
   imageFull?: boolean;
+  height?: string | number;
+  'data-parallax'?: boolean;
+  'data-parallax-direction'?: 'x' | 'y' | 'xy';
+  'data-scrub'?: boolean;
+  'data-speed'?: string | number;
   [key: string]: any;
 }
 
@@ -17,6 +22,11 @@ declare global {
 export default function NxParallaxAnimation({ 
   src, 
   imageFull = false,
+  height = '200px',
+  'data-parallax': parallax = true,
+  'data-parallax-direction': direction = 'y',
+  'data-scrub': scrub = true,
+  'data-speed': speed,
   ...props 
 }: NxParallaxAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -65,10 +75,12 @@ export default function NxParallaxAnimation({
         ref={containerRef}
         className={`
           nx-relative 
-          ${imageFull ? 'nx-h-[400px]' : 'nx-h-[500px]'}
           nx-overflow-hidden
           ${!imageFull && 'nx-flex nx-items-center nx-justify-center'}
         `}
+        style={{ 
+          height: typeof height === 'number' ? `${height}px` : height
+        }}
         {...(imageFull ? props : {})}
       >
         <img 
@@ -76,8 +88,11 @@ export default function NxParallaxAnimation({
           className={`
             ${imageFull ? 'nx-w-full nx-h-[120%] nx-object-cover' : 'nx-w-[200px] nx-h-[200px] nx-object-cover'}
           `}
+          data-parallax={parallax ? "true" : "false"}
+          data-parallax-direction={direction}
+          data-scrub={scrub ? "true" : "false"}
+          data-speed={speed}
           {...(!imageFull ? props : {})}
-          data-image-parallax="true"
         />
       </div>
     </div>
