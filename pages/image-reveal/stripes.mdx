@@ -1,0 +1,111 @@
+# Effet Stripes
+
+import NxImageReveal from '../../components/NxImageReveal'
+
+## Configuration de base
+
+L'effet stripes divise l'image en bandes qui s'animent séquentiellement :
+
+```html
+<div 
+  data-scroll-image-reveal 
+  data-animate="stripes"
+>
+  <img src="image.jpg" />
+</div>
+```
+
+<NxImageReveal
+  data-animate="stripes"
+  data-stripes-number="6"
+  data-stripes-direction="x"
+  src="/images/demo-1.jpg"
+/>
+
+## Personnalisation
+
+### Nombre de bandes
+Contrôlez le nombre de bandes avec `data-stripes-number` :
+
+```html
+<div 
+  data-scroll-image-reveal 
+  data-animate="stripes"
+  data-stripes-number="32"
+>
+  <img data-scroll-image-reveal-target src="image.jpg" />
+</div>
+```
+
+<NxImageReveal
+  data-animate="stripes"
+  data-stripes-number="32"
+  src="/images/demo-1.jpg"
+/>
+
+### Couleur des bandes
+Personnalisez la couleur avec `data-stripe-color` :
+
+```html
+<div 
+  data-scroll-image-reveal 
+  data-animate="stripes"
+  data-stripe-color="#ff4444"
+>
+  <img data-scroll-image-reveal-target src="image.jpg" />
+</div>
+```
+
+<NxImageReveal
+  data-animate="stripes"
+  data-stripe-color="#ff4444"
+  src="/images/demo-1.jpg"
+/>
+
+## Animation
+
+### Direction du Stagger
+Contrôlez la séquence d'animation avec `data-stripes-stagger-direction` :
+
+```html
+<div 
+  data-scroll-image-reveal 
+  data-animate="stripes"
+  data-stripes-stagger-direction="random"
+  data-stripes-number="32"
+>
+  <img data-scroll-image-reveal-target src="image.jpg" />
+</div>
+```
+
+Options disponibles :
+- `start` : Depuis le début
+- `center` : Depuis le centre
+- `end` : Depuis la fin
+- `random` : Aléatoire
+
+<NxImageReveal
+  data-animate="stripes"
+  data-stripes-stagger-direction="random"
+  data-stripes-number="32"
+  src="/images/demo-1.jpg"
+/>
+
+### Easing personnalisé
+Ajustez l'easing avec `data-stripes-easing` :
+
+```html
+<div 
+  data-scroll-image-reveal 
+  data-animate="stripes"
+  data-stripes-easing="cubic-bezier(0.88,0,.11,.99)"
+>
+  <img data-scroll-image-reveal-target src="image.jpg" />
+</div>
+```
+
+<NxImageReveal
+  data-animate="stripes"
+  stripesEasing="cubic-bezier(0.88, 0, 0.11, 0.99)"
+  src="/images/demo-1.jpg"
+/> 

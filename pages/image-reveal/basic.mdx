@@ -1,0 +1,30 @@
+# Les bases de l'Image Reveal
+
+import NxImageReveal from '../../components/NxImageReveal'
+
+Pour créer une animation de révélation d'image, vous aurez besoin de deux attributs principaux :
+- `data-scroll-image-reveal` sur le conteneur
+
+## Configuration de base
+
+```html
+<div data-scroll-image-reveal class="reveal">
+  <img src="/path/to/image.jpg" />
+</div>
+```
+
+### Nécessite du CSS
+```css
+.reveal {
+  position: relative;
+  overflow: hidden;
+  clip-path: inset(0% 0% 0% 0%);
+}
+```
+
+<NxImageReveal
+  axis="y"
+  duration={2}
+  src="/images/demo-1.jpg"
+/>
+

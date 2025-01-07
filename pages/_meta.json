@@ -11,5 +11,11 @@
     "theme": {
       "collapsed": true
     }
+  },
+  "image-reveal": {
+    "title": "Image Reveal",
+    "theme": {
+      "collapsed": true
+    }
   }
 }

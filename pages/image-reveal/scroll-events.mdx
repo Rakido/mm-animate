@@ -1,0 +1,43 @@
+# Événements de Scroll
+
+import NxImageReveal from '../../components/NxImageReveal'
+
+## Scrubbing
+
+L'attribut `data-scrub` permet de synchroniser l'animation avec le défilement :
+
+```html
+<div 
+  data-scroll-image-reveal 
+  data-scrub="true"
+>
+  <img data-scroll-image-reveal-target src="image.jpg" />
+</div>
+```
+
+<NxImageReveal
+  data-scrub="true"
+  src="/images/demo-1.jpg"
+/>
+
+## Points de déclenchement
+
+### Point de départ
+```html
+<div 
+  data-scroll-image-reveal 
+  data-start="top bottom"
+>
+  <img data-scroll-image-reveal-target src="image.jpg" />
+</div>
+```
+
+### Point de fin
+```html
+<div 
+  data-scroll-image-reveal 
+  data-end="bottom top"
+>
+  <img data-scroll-image-reveal-target src="image.jpg" />
+</div>
+```

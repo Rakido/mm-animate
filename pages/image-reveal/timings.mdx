@@ -1,0 +1,38 @@
+# Durée et délais
+
+import NxImageReveal from '../../components/NxImageReveal'
+
+## Durée globale
+
+L'attribut `data-duration` contrôle la durée de l'animation :
+
+```html
+<div 
+  data-scroll-image-reveal 
+  data-duration="1.5"
+>
+  <img data-scroll-image-reveal-target src="image.jpg" />
+</div>
+```
+<NxImageReveal
+  data-duration="10"
+  src="/images/demo-1.jpg"
+/>
+
+## Délai initial
+
+`data-delay` ajoute un délai avant le début de l'animation :
+
+```html
+<div 
+  data-scroll-image-reveal 
+  data-delay="2"
+>
+  <img data-scroll-image-reveal-target src="image.jpg" />
+</div>
+```
+
+<NxImageReveal
+  data-delay="2"
+  src="/images/demo-1.jpg"
+/>

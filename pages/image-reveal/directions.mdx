@@ -1,0 +1,42 @@
+# Directions
+
+import NxImageReveal from '../../components/NxImageReveal'
+
+## Axes de déplacement
+
+L'attribut `data-axis` contrôle la direction des animations :
+
+```html
+<div 
+  data-scroll-image-reveal 
+  data-axis="x"
+>
+  <img src="image.jpg" />
+</div>
+```
+
+### Options disponibles
+- `x` : De gauche à droite
+- `-x` : De droite à gauche
+- `y` : De haut en bas
+- `-y` : De bas en haut
+
+<NxImageReveal
+  axis="-x"
+  src="/images/demo-1.jpg"
+/>
+
+<NxImageReveal
+  axis="y"
+  src="/images/demo-1.jpg"
+/>
+
+<NxImageReveal
+  axis="x"
+  src="/images/demo-1.jpg"
+/>
+
+<NxImageReveal
+  axis="-y"
+  src="/images/demo-1.jpg"
+/>

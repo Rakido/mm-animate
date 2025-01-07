@@ -3,19 +3,41 @@ import { useCallback } from 'react'
 interface NxReloadAnimationProps {
   className?: string;
   targetRef: React.RefObject<HTMLElement>;
-  type?: 'text' | 'stagger';
+  type?: 'text' | 'stagger' | 'image';
+  onReload?: () => void;
 }
 
-export default function NxReloadAnimation({ className = '', targetRef, type = 'text' }: NxReloadAnimationProps) {
+export default function NxReloadAnimation({ 
+  className = '', 
+  targetRef, 
+  type = 'text',
+  onReload 
+}: NxReloadAnimationProps) {
   const handleReload = useCallback(() => {
+    if (onReload) {
+      onReload();
+      return;
+    }
+
     if (typeof window !== 'undefined' && targetRef.current) {
-      if (type === 'stagger' && window.moonMoonStagger) {
-        window.moonMoonStagger.initStaggerAnimation(targetRef.current);
-      } else if (type === 'text' && window.moonMoonText) {
-        window.moonMoonText.initTextAnimation(targetRef.current);
+      switch(type) {
+        case 'stagger':
+          if (window.moonMoonStagger) {
+            window.moonMoonStagger.initStaggerAnimation(targetRef.current);
+          }
+          break;
+        case 'image':
+          if (window.moonMoonImage) {
+            window.moonMoonImage.initScrollImageReveal(targetRef.current);
+          }
+          break;
+        default:
+          if (window.moonMoonText) {
+            window.moonMoonText.initTextAnimation(targetRef.current);
+          }
       }
     }
-  }, [targetRef, type]);
+  }, [targetRef, type, onReload]);
 
   return (
     <button
