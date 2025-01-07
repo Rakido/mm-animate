@@ -1,0 +1,109 @@
+# Petits éléments en parallax
+
+import NxParallaxAnimation from '../../components/NxParallaxAnimation'
+
+## Direction du parallax
+
+Vous pouvez contrôler la direction du parallax avec `data-parallax-direction` :
+
+```html
+<div class="parallax-container">
+  <img 
+    src="image.jpg" 
+    data-parallax 
+    data-parallax-direction="y" 
+    data-scrub="true"
+  />
+</div>
+```
+
+### Nécessite du CSS
+
+```css
+.parallax-container {
+  position: relative;
+  overflow: hidden;
+}
+```
+
+### Vertical (y)
+<NxParallaxAnimation 
+  src="https://picsum.photos/200/200"
+  data-parallax
+  data-parallax-direction="y"
+  data-scrub={true}
+/>
+
+### Horizontal (x)
+<NxParallaxAnimation 
+  src="https://picsum.photos/200/200"
+  data-parallax
+  data-parallax-direction="x"
+  data-scrub={true}
+/>
+
+### Diagonal (xy)
+<NxParallaxAnimation 
+  src="https://picsum.photos/200/200"
+  data-parallax
+  data-parallax-direction="xy"
+  data-scrub={true}
+/>
+
+---
+
+## Vitesse du parallax
+
+Vous pouvez contrôler la vitesse du parallax avec `data-speed` :
+
+```html
+<div class="parallax-container">
+  <img 
+    src="image.jpg" 
+    data-parallax 
+    data-parallax-direction="y" 
+    data-scrub="true"
+    data-speed="1.1"
+  />
+</div>
+```
+
+<NxParallaxAnimation 
+  src="https://picsum.photos/200/200"
+  data-parallax
+  data-parallax-direction="y"
+  data-scrub={true}
+  data-speed="1.1"
+  height="80vh"
+/>
+
+---
+## Démarrage et fin de l'animation
+
+Vous pouvez contrôler le démarrage et la fin de l'animation avec `data-start` et `data-end` :
+
+```html
+<div class="parallax-container">
+    <img 
+        src="https://picsum.photos/200/200?1" 
+        data-parallax 
+        data-parallax-direction="y" 
+        data-speed="0.5" 
+        data-scrub="true"
+        data-start="top bottom+=20%"
+        data-end="bottom top-=20%"
+        class="parallax-element"
+        alt="Parallax Image 1"
+    >
+</div>
+```
+
+<NxParallaxAnimation 
+  src="https://picsum.photos/200/200"
+  data-parallax
+  data-parallax-direction="x"
+  data-scrub={true}
+  data-speed="0.5"
+  data-start="20% 20%"
+  data-end="bottom top+=20%"
+/>
