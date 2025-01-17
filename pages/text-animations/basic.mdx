@@ -40,5 +40,51 @@ L'attribut `data-scroll-text-reveal` initialise le système d'animation, tandis 
   Ici l'animation est appliquée à chaque caractère
 </NxTextAnimation>
 
+Du CSS est nécessaire pour fonctionner. Le fichier est disponible ici : [data-text-reveal.css](https://github.com/Rakido/mm-animation-library/blob/main/css/data-text-reveal.css).
+
+```css
+  /* Base styles for split text containers */
+  [data-scroll-text-reveal] {
+      line-height: 1; /* Reset line height */
+  }
+
+  /* Handle line splits */
+  [data-scroll-text-reveal] .split-line {
+      display: block;
+      overflow: hidden;
+      line-height: 1.1; /* Slightly larger than 1 to prevent clipping */
+  }
+
+  /* Handle word splits */
+  [data-scroll-text-reveal] .word {
+      display: inline-block;
+      line-height: 1;
+      margin-right: 0.25em; /* Space between words */
+  }
+
+  /* Handle char splits */
+  [data-scroll-text-reveal] .char {
+      display: inline-block;
+      line-height: 1;
+  }
+
+  /* Container adjustments for line animations */
+  [data-scroll-text-reveal][data-splitting="lines"] {
+      overflow: hidden;
+  }
+
+  [data-scroll-text-reveal][data-splitting="lines"] .line {
+      display: block;
+      line-height: 1.1;
+      position: relative;
+  }
+
+  /* Preserve whitespace */
+  [data-scroll-text-reveal] .whitespace {
+      display: inline-block;
+      width: 0.25em;
+  }
+```
+
 ---
 
