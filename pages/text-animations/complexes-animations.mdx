@@ -19,6 +19,20 @@ La couleur de départ est gérée par `data-color`. L'axe est géré par `data-a
 </h3>
 ```
 
+Nécessite du CSS pour fonctionner. Vous pouvez remplacer les selecteurs. 
+
+```css
+  [data-animate="shutter-word"] {
+      overflow: hidden;
+  }
+
+  [data-animate="shutter-word"] .word {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: top;
+  }
+```
+
 <NxTextAnimation 
   data-scroll-text-reveal 
   data-splitting="words" 
