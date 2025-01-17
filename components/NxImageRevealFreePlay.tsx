@@ -1,118 +1,159 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import NxReloadAnimation from './NxReloadAnimation'
+import { useRouter } from 'next/router'
 
 const EASING_OPTIONS = {
-  'GSAP Defaults': {
-    'Power1 Out': 'power1.out',
-    'Power2 Out': 'power2.out',
-    'Power3 Out': 'power3.out',
-    'Power4 Out': 'power4.out'
-  },
-  'Bounce & Elastic': {
-    'Bounce Out': 'bounce.out',
-    'Elastic Out': 'elastic.out(1, 0.3)',
-    'Back Out': 'back.out(1.7)'
-  },
-  'Custom Curves': {
-    'Moon Bounce': 'M0,0 C0.791,0.232 0.04,0.737 0.212,0.885 0.42,1.065 0.779,1.011 1,0.824',
-    'Slow Start': 'M0,0 C0.02,0.2 0.4,0.8 1,1',
-    'Quick Pause': 'M0,0 C0.4,0 0.5,0.8 1,1',
-    'Double Jump': 'M0,0 C0.5,0.5 0.7,0.1 0.8,0.8 0.9,1 1,1 1,1',
-    'Smooth Bounce': 'M0,0 C0.3,1 0.7,0.5 1,1',
-    'Elastic Snap': 'M0,0 C0.2,0 0.4,1.6 0.6,0.8 0.8,0.2 1,1 1,1'
-  }
-}
+  'power1.out': 'Power1.easeOut',
+  'power2.out': 'Power2.easeOut',
+  'power3.out': 'Power3.easeOut',
+  'power4.out': 'Power4.easeOut',
+  'back.out': 'Back.easeOut',
+  'elastic.out': 'Elastic.easeOut',
+  'bounce.out': 'Bounce.easeOut',
+  'circ.out': 'Circ.easeOut',
+  'expo.out': 'Expo.easeOut',
+  'sine.out': 'Sine.easeOut'
+};
 
-const STAGGER_METHODS = [
-  { value: 'start', label: 'From Start' },
-  { value: 'center', label: 'From Center' },
-  { value: 'end', label: 'From End' },
-  { value: 'random', label: 'Random' }
-];
+const ANIMATION_OPTIONS = {
+  'slide': 'Slide',
+  'grid': 'Grid',
+  'stripes': 'Stripes'
+};
 
 export default function NxImageRevealFreePlay() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [animation, setAnimation] = useState('grid')
-  const [easing, setEasing] = useState('elastic.out(1, 0.3)')
-  const [duration, setDuration] = useState('1')
-  const [scrub, setScrub] = useState('false')
-  const [gridCells, setGridCells] = useState('9')
-  const [gridColumns, setGridColumns] = useState('3')
-  const [gridColor, setGridColor] = useState('#000000')
-  const [stripesNumber, setStripesNumber] = useState('6')
+  const router = useRouter()
+  const [isReady, setIsReady] = useState(false)
+  const [isSpinning, setIsSpinning] = useState(false)
+  const [key, setKey] = useState(0)
+  
+  // Form states
+  const [animation, setAnimation] = useState('slide')
+  const [axis, setAxis] = useState('y')
+  const [easing, setEasing] = useState('power2.out')
+  const [duration, setDuration] = useState(1)
+  const [gridSize, setGridSize] = useState(8)
+  const [stripesNumber, setStripesNumber] = useState(12)
   const [stripeColor, setStripeColor] = useState('#000000')
   const [staggerDirection, setStaggerDirection] = useState('start')
 
-  const replayAnimation = useCallback(() => {
-    if (typeof window !== 'undefined' && window.moonMoonImage && containerRef.current) {
-      setTimeout(() => {
-        window.moonMoonImage.initScrollImageReveal(containerRef.current);
-      }, 100);
+  const resetAndPlay = useCallback(() => {
+    if (!window.moonMoonImage || !containerRef.current) return;
+
+    // Start spin animation
+    setIsSpinning(true);
+
+    // Kill existing animations
+    if (window.ScrollTrigger) {
+      window.ScrollTrigger.getAll().forEach(st => st.kill());
     }
+
+    // Force remount by updating key
+    setKey(k => k + 1);
+
+    // Stop spinning after animation should be complete
+    setTimeout(() => setIsSpinning(false), 300);
   }, []);
 
-  // Function to generate random parameters
-  const generateRandomParams = useCallback(() => {
-    const randomAnimation = getRandomItem(['grid', 'stripes', 'shutter']);
-    const randomMethod = getRandomItem(['start', 'center', 'end', 'random']);
-    
-    setAnimation(randomAnimation);
-    setEasing('elastic.out(1, 0.3)');
-    setDuration(getRandomNumber(0.5, 2));
-    setScrub('false');
-    setStaggerDirection(randomMethod);
-    setGridCells(getRandomNumber(4, 16, 0));
-    setGridColumns(getRandomNumber(2, 4, 0));
-    setStripesNumber(getRandomNumber(4, 8, 0));
-  }, []);
-
-  // Helper function to get random item from array
-  const getRandomItem = <T,>(array: T[]): T => {
-    return array[Math.floor(Math.random() * array.length)]
-  }
-
-  // Helper function to get random number between min and max
-  const getRandomNumber = (min: number, max: number, decimals: number = 2): string => {
-    return (Math.random() * (max - min) + min).toFixed(decimals)
-  }
-
-  // Initialize with random parameters and trigger animation
+  // Load scripts
   useEffect(() => {
-    const initializeAnimation = async () => {
-      generateRandomParams();
-      await new Promise(resolve => setTimeout(resolve, 200));
-      replayAnimation();
+    const loadScript = (src: string): Promise<void> => {
+      return new Promise((resolve, reject) => {
+        const existingScript = document.querySelector(`script[src="${src}"]`);
+        if (existingScript) {
+          resolve();
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = false;
+        script.onload = () => resolve();
+        script.onerror = (error) => reject(error);
+        document.body.appendChild(script);
+      });
     };
 
-    initializeAnimation();
-  }, [generateRandomParams, replayAnimation]);
+    const loadScripts = async () => {
+      try {
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
+        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-image-reveal.js');
+        setIsReady(true);
+      } catch (error) {
+        console.error('Error loading animation scripts:', error);
+      }
+    };
+
+    loadScripts();
+  }, []);
+
+  // Initialize animation when ready or settings change
+  useEffect(() => {
+    if (!isReady || !window.moonMoonImage) return;
+    
+    const timer = setTimeout(() => {
+      if (containerRef.current) {
+        window.moonMoonImage.initScrollImageReveal(containerRef.current);
+      }
+    }, 100);
+    
+    return () => {
+      clearTimeout(timer);
+      if (window.ScrollTrigger) {
+        window.ScrollTrigger.getAll().forEach(st => st.kill());
+      }
+    };
+  }, [isReady, key, animation, axis, easing, duration, gridSize, stripesNumber, stripeColor, staggerDirection]);
 
   return (
     <div className="nx-relative nx-w-full">
-      <div className="nx-relative nx-my-8 nx-mx-auto nx-max-w-6xl nx-bg-gray-800 nx-rounded-xl nx-border nx-border-gray-700">
-        <div className="nx-grid nx-grid-cols-1 md:nx-grid-cols-2 nx-gap-0">
-          {/* Animation Preview */}
-          <div className="nx-relative nx-p-8 nx-min-h-[400px] nx-flex nx-items-center nx-justify-center nx-bg-gray-900">
-            <div className="nx-absolute" style={{top: '1rem', right: '1rem', zIndex: 10}}>
-              <NxReloadAnimation targetRef={containerRef} type="image" onReload={replayAnimation} />
+      <div className="nx-grid nx-grid-cols-2 nx-gap-8">
+        <div>
+          <div className="nx-relative nx-my-8 nx-mx-auto nx-bg-gray-800 nx-rounded-xl nx-border nx-border-gray-900">
+            <div className="nx-absolute nx-top-4 nx-right-4 nx-z-10">
+              <button
+                onClick={resetAndPlay}
+                className={`nx-p-2 nx-rounded-lg nx-bg-gray-700 hover:nx-bg-gray-600 nx-transition-colors ${
+                  isSpinning ? 'nx-animate-spin' : ''
+                }`}
+                disabled={isSpinning}
+                aria-label="Reload animation"
+              >
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  width="20" 
+                  height="20" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                  className="nx-text-white"
+                >
+                  <path d="M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+                  <path d="M21 3v5h-5"/>
+                </svg>
+              </button>
             </div>
             
-            <div className="nx-p-[100px] nx-flex nx-items-center nx-justify-center reveal">
+            <div className="nx-p-8 reveal">
               <div 
+                key={key}
                 ref={containerRef}
                 data-scroll-image-reveal="true"
                 data-animate={animation}
-                data-easing={easing}
+                data-axis={axis}
                 data-duration={duration}
-                data-scrub={scrub}
-                data-grid-cells={animation === 'grid' ? gridCells : undefined}
-                data-grid-columns={animation === 'grid' ? gridColumns : undefined}
-                data-grid-color={animation === 'grid' ? gridColor : undefined}
-                data-stripes-number={animation === 'stripes' ? stripesNumber : undefined}
-                data-stripe-color={animation === 'stripes' ? stripeColor : undefined}
-                data-grid-stagger-direction={animation === 'grid' ? staggerDirection : undefined}
-                data-stripes-stagger-direction={animation === 'stripes' ? staggerDirection : undefined}
+                data-scroll-image-easing={easing}
+                data-grid-size={gridSize}
+                data-stripes-number={stripesNumber}
+                data-stripe-color={stripeColor}
+                data-stripes-stagger-direction={staggerDirection}
                 className="reveal"
+                style={{ visibility: isReady ? 'visible' : 'hidden' }}
               >
                 <img 
                   src="/images/demo-1.jpg"
@@ -122,181 +163,113 @@ export default function NxImageRevealFreePlay() {
               </div>
             </div>
           </div>
+        </div>
 
+        <div className="nx-space-y-4">
           {/* Controls */}
-          <div className="nx-p-8 nx-bg-gray-900 md:nx-rounded-r-xl nx-space-y-6">
-            <h3 className="nx-text-lg nx-font-bold nx-text-white">Image Reveal Controls</h3>
-            
-            {/* Two Column Grid for Controls */}
-            <div className="nx-grid nx-grid-cols-2 nx-gap-4">
-              {/* Left Column */}
-              <div className="nx-space-y-4">
-                {/* Animation Type */}
-                <div className="nx-space-y-2">
-                  <label className="nx-block nx-text-sm nx-font-medium nx-text-gray-400">Animation Type</label>
-                  <select
-                    value={animation}
-                    onChange={(e) => setAnimation(e.target.value)}
-                    className="nx-w-full nx-p-2 nx-rounded nx-bg-gray-800 nx-text-white nx-border nx-border-gray-700 focus:nx-border-blue-500 focus:nx-ring-1 focus:nx-ring-blue-500"
-                  >
-                    <option value="grid">Grid</option>
-                    <option value="stripes">Stripes</option>
-                    <option value="shutter">Shutter</option>
-                  </select>
-                </div>
+          <div className="nx-space-y-4">
+            <div>
+              <label className="nx-block nx-text-sm nx-font-medium nx-mb-1">Animation Type</label>
+              <select 
+                value={animation}
+                onChange={(e) => setAnimation(e.target.value)}
+                className="nx-block nx-w-full nx-rounded-md nx-border-gray-700 nx-bg-gray-800"
+              >
+                {Object.entries(ANIMATION_OPTIONS).map(([value, label]) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
+              </select>
+            </div>
 
-                {/* Duration */}
-                <div className="nx-space-y-2">
-                  <label className="nx-block nx-text-sm nx-font-medium nx-text-gray-400">Duration (s)</label>
-                  <input
+            <div>
+              <label className="nx-block nx-text-sm nx-font-medium nx-mb-1">Axis</label>
+              <select 
+                value={axis}
+                onChange={(e) => setAxis(e.target.value)}
+                className="nx-block nx-w-full nx-rounded-md nx-border-gray-700 nx-bg-gray-800"
+              >
+                <option value="x">X</option>
+                <option value="-x">-X</option>
+                <option value="y">Y</option>
+                <option value="-y">-Y</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="nx-block nx-text-sm nx-font-medium nx-mb-1">Easing</label>
+              <select 
+                value={easing}
+                onChange={(e) => setEasing(e.target.value)}
+                className="nx-block nx-w-full nx-rounded-md nx-border-gray-700 nx-bg-gray-800"
+              >
+                {Object.entries(EASING_OPTIONS).map(([value, label]) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="nx-block nx-text-sm nx-font-medium nx-mb-1">Duration (seconds)</label>
+              <input 
+                type="number"
+                value={duration}
+                onChange={(e) => setDuration(Number(e.target.value))}
+                min="0.1"
+                step="0.1"
+                className="nx-block nx-w-full nx-rounded-md nx-border-gray-700 nx-bg-gray-800"
+              />
+            </div>
+
+            {animation === 'grid' && (
+              <div>
+                <label className="nx-block nx-text-sm nx-font-medium nx-mb-1">Grid Size</label>
+                <input 
+                  type="number"
+                  value={gridSize}
+                  onChange={(e) => setGridSize(Number(e.target.value))}
+                  min="1"
+                  className="nx-block nx-w-full nx-rounded-md nx-border-gray-700 nx-bg-gray-800"
+                />
+              </div>
+            )}
+
+            {animation === 'stripes' && (
+              <>
+                <div>
+                  <label className="nx-block nx-text-sm nx-font-medium nx-mb-1">Number of Stripes</label>
+                  <input 
                     type="number"
-                    value={duration}
-                    onChange={(e) => setDuration(e.target.value)}
-                    className="nx-w-full nx-p-2 nx-rounded nx-bg-gray-800 nx-text-white nx-border nx-border-gray-700 focus:nx-border-blue-500 focus:nx-ring-1 focus:nx-ring-blue-500"
-                    step="0.1"
-                    min="0"
+                    value={stripesNumber}
+                    onChange={(e) => setStripesNumber(Number(e.target.value))}
+                    min="1"
+                    className="nx-block nx-w-full nx-rounded-md nx-border-gray-700 nx-bg-gray-800"
                   />
                 </div>
 
-                {/* Grid specific controls */}
-                {animation === 'grid' && (
-                  <>
-                    <div className="nx-space-y-2">
-                      <label className="nx-block nx-text-sm nx-font-medium nx-text-gray-400">Grid Cells</label>
-                      <input
-                        type="number"
-                        value={gridCells}
-                        onChange={(e) => setGridCells(e.target.value)}
-                        className="nx-w-full nx-p-2 nx-rounded nx-bg-gray-800 nx-text-white nx-border nx-border-gray-700 focus:nx-border-blue-500 focus:nx-ring-1 focus:nx-ring-blue-500"
-                        min="4"
-                      />
-                    </div>
-                    <div className="nx-space-y-2">
-                      <label className="nx-block nx-text-sm nx-font-medium nx-text-gray-400">Grid Columns</label>
-                      <input
-                        type="number"
-                        value={gridColumns}
-                        onChange={(e) => setGridColumns(e.target.value)}
-                        className="nx-w-full nx-p-2 nx-rounded nx-bg-gray-800 nx-text-white nx-border nx-border-gray-700 focus:nx-border-blue-500 focus:nx-ring-1 focus:nx-ring-blue-500"
-                        min="2"
-                      />
-                    </div>
-                    <div className="nx-space-y-2">
-                      <label className="nx-block nx-text-sm nx-font-medium nx-text-gray-400">Grid Color</label>
-                      <input
-                        type="color"
-                        value={gridColor}
-                        onChange={(e) => setGridColor(e.target.value)}
-                        className="nx-w-full nx-p-2 nx-rounded nx-bg-gray-800 nx-text-white nx-border nx-border-gray-700 focus:nx-border-blue-500 focus:nx-ring-1 focus:nx-ring-blue-500"
-                      />
-                    </div>
-                  </>
-                )}
-
-                {/* Stripes specific controls */}
-                {animation === 'stripes' && (
-                  <>
-                    <div className="nx-space-y-2">
-                      <label className="nx-block nx-text-sm nx-font-medium nx-text-gray-400">Number of Stripes</label>
-                      <input
-                        type="number"
-                        value={stripesNumber}
-                        onChange={(e) => setStripesNumber(e.target.value)}
-                        className="nx-w-full nx-p-2 nx-rounded nx-bg-gray-800 nx-text-white nx-border nx-border-gray-700 focus:nx-border-blue-500 focus:nx-ring-1 focus:nx-ring-blue-500"
-                        min="2"
-                      />
-                    </div>
-                    <div className="nx-space-y-2">
-                      <label className="nx-block nx-text-sm nx-font-medium nx-text-gray-400">Stripe Color</label>
-                      <input
-                        type="color"
-                        value={stripeColor}
-                        onChange={(e) => setStripeColor(e.target.value)}
-                        className="nx-w-full nx-p-2 nx-rounded nx-bg-gray-800 nx-text-white nx-border nx-border-gray-700 focus:nx-border-blue-500 focus:nx-ring-1 focus:nx-ring-blue-500"
-                      />
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* Right Column */}
-              <div className="nx-space-y-4">
-                {/* Easing */}
-                <div className="nx-space-y-2">
-                  <label className="nx-block nx-text-sm nx-font-medium nx-text-gray-400">Easing</label>
-                  <select
-                    value={easing}
-                    onChange={(e) => setEasing(e.target.value)}
-                    className="nx-w-full nx-p-2 nx-rounded nx-bg-gray-800 nx-text-white nx-border nx-border-gray-700 focus:nx-border-blue-500 focus:nx-ring-1 focus:nx-ring-blue-500"
-                  >
-                    {Object.entries(EASING_OPTIONS).map(([category, easings]) => (
-                      <optgroup label={category} key={category}>
-                        {Object.entries(easings).map(([name, value]) => (
-                          <option key={name} value={value}>
-                            {name}
-                          </option>
-                        ))}
-                      </optgroup>
-                    ))}
-                  </select>
+                <div>
+                  <label className="nx-block nx-text-sm nx-font-medium nx-mb-1">Stripe Color</label>
+                  <input 
+                    type="color"
+                    value={stripeColor}
+                    onChange={(e) => setStripeColor(e.target.value)}
+                    className="nx-block nx-w-full nx-rounded-md nx-border-gray-700 nx-bg-gray-800"
+                  />
                 </div>
 
-                {/* Scrub */}
-                <div className="nx-space-y-2">
-                  <label className="nx-block nx-text-sm nx-font-medium nx-text-gray-400">Scrub</label>
-                  <select
-                    value={scrub}
-                    onChange={(e) => setScrub(e.target.value)}
-                    className="nx-w-full nx-p-2 nx-rounded nx-bg-gray-800 nx-text-white nx-border nx-border-gray-700 focus:nx-border-blue-500 focus:nx-ring-1 focus:nx-ring-blue-500"
+                <div>
+                  <label className="nx-block nx-text-sm nx-font-medium nx-mb-1">Stagger Direction</label>
+                  <select 
+                    value={staggerDirection}
+                    onChange={(e) => setStaggerDirection(e.target.value)}
+                    className="nx-block nx-w-full nx-rounded-md nx-border-gray-700 nx-bg-gray-800"
                   >
-                    <option value="false">Off</option>
-                    <option value="true">On</option>
+                    <option value="start">Start</option>
+                    <option value="center">Center</option>
+                    <option value="end">End</option>
                   </select>
                 </div>
-
-                {/* Stagger Direction */}
-                {(animation === 'grid' || animation === 'stripes') && (
-                  <div className="nx-space-y-2">
-                    <label className="nx-block nx-text-sm nx-font-medium nx-text-gray-400">Stagger Direction</label>
-                    <select
-                      value={staggerDirection}
-                      onChange={(e) => setStaggerDirection(e.target.value)}
-                      className="nx-w-full nx-p-2 nx-rounded nx-bg-gray-800 nx-text-white nx-border nx-border-gray-700 focus:nx-border-blue-500 focus:nx-ring-1 focus:nx-ring-blue-500"
-                    >
-                      {STAGGER_METHODS.map(({ value, label }) => (
-                        <option key={value} value={value}>
-                          {label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-
-                {/* Randomize Button */}
-                <button
-                  onClick={() => {
-                    generateRandomParams();
-                    setTimeout(replayAnimation, 100);
-                  }}
-                  className="nx-w-full nx-mt-4 nx-p-3 nx-bg-white hover:nx-bg-gray-100 nx-text-gray-900 nx-rounded-lg nx-transition-all nx-duration-200 nx-flex nx-items-center nx-justify-center nx-gap-2 nx-shadow-lg hover:nx-shadow-xl hover:nx-scale-[1.02] nx-font-medium"
-                >
-                  <svg 
-                    className="nx-w-5 nx-h-5" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
-                    />
-                  </svg>
-                  Randomize
-                </button>
-              </div>
-            </div>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -42,23 +42,33 @@ export default function NxImageReveal({
   const containerRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const [isReady, setIsReady] = useState(false)
+  const [key, setKey] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
 
   const initializeAnimation = useCallback(() => {
-    if (!window.moonMoonImage || !containerRef.current) return;
+    if (!window.moonMoonImage || !containerRef.current || isAnimating) return;
+
+    setIsAnimating(true);
 
     // Kill existing animations
     if (window.ScrollTrigger) {
       window.ScrollTrigger.getAll().forEach(st => st.kill());
     }
 
-    // Initialize animation
+    // Use RAF to batch DOM operations
     requestAnimationFrame(() => {
-      window.moonMoonImage.initScrollImageReveal(containerRef.current);
+      if (containerRef.current) {
+        window.moonMoonImage.initScrollImageReveal(containerRef.current);
+        // Reset animation state after animation duration
+        setTimeout(() => setIsAnimating(false), duration * 1000);
+      }
     });
-  }, []);
+  }, [duration, isAnimating]);
 
-  // Load scripts
+  // Load scripts once
   useEffect(() => {
+    let mounted = true;
+    
     const loadScript = (src: string): Promise<void> => {
       return new Promise((resolve, reject) => {
         const existingScript = document.querySelector(`script[src="${src}"]`);
@@ -79,28 +89,36 @@ export default function NxImageReveal({
     const loadScripts = async () => {
       try {
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
-        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for GSAP
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
         await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-image-reveal.js');
-        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for library
-        setIsReady(true);
+        if (mounted) {
+          setIsReady(true);
+        }
       } catch (error) {
         console.error('Error loading animation scripts:', error);
       }
     };
 
     loadScripts();
+    return () => { mounted = false; };
   }, []);
 
-  // Initialize animation when ready
+  // Initialize animation when ready or key changes
   useEffect(() => {
     if (!isReady) return;
     
-    // Initial animation
-    const timer = setTimeout(initializeAnimation, 100);
+    const timer = setTimeout(initializeAnimation, 50);
+    return () => {
+      clearTimeout(timer);
+      if (window.ScrollTrigger) {
+        window.ScrollTrigger.getAll().forEach(st => st.kill());
+      }
+    };
+  }, [isReady, key, initializeAnimation]);
 
-    // Handle route changes
+  // Handle route changes
+  useEffect(() => {
     const handleRouteChange = () => {
       if (window.ScrollTrigger) {
         window.ScrollTrigger.getAll().forEach(st => st.kill());
@@ -108,35 +126,42 @@ export default function NxImageReveal({
     };
 
     const handleRouteComplete = () => {
-      setTimeout(initializeAnimation, 100);
+      requestAnimationFrame(() => {
+        setKey(k => k + 1);
+      });
     };
 
     router.events.on('routeChangeStart', handleRouteChange);
     router.events.on('routeChangeComplete', handleRouteComplete);
     
     return () => {
-      clearTimeout(timer);
       router.events.off('routeChangeStart', handleRouteChange);
       router.events.off('routeChangeComplete', handleRouteComplete);
-      if (window.ScrollTrigger) {
-        window.ScrollTrigger.getAll().forEach(st => st.kill());
-      }
     };
-  }, [isReady, initializeAnimation, router.events]);
+  }, [router.asPath]);
 
   return (
     <div className="nx-relative nx-w-full">
       <div className="nx-relative nx-my-8 nx-mx-auto nx-max-w-4xl nx-bg-gray-800 nx-rounded-xl nx-border nx-border-gray-900">
         <div className="nx-absolute nx-top-4 nx-right-4 nx-z-10">
           <button
-            onClick={initializeAnimation}
-            className="nx-p-2 nx-rounded-lg nx-bg-gray-700 hover:nx-bg-gray-600 nx-transition-colors"
+            onClick={() => {
+              if (!isAnimating) {
+                requestAnimationFrame(() => {
+                  setKey(k => k + 1);
+                });
+              }
+            }}
+            disabled={isAnimating}
+            className={`nx-p-2 nx-rounded-lg nx-bg-gray-700 hover:nx-bg-gray-600 nx-transition-colors ${
+              isAnimating ? 'nx-opacity-50 nx-cursor-not-allowed' : ''
+            }`}
             aria-label="Reload animation"
           >
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
-              width="24" 
-              height="24" 
+              width="20" 
+              height="20" 
               viewBox="0 0 24 24" 
               fill="none" 
               stroke="currentColor" 
@@ -145,13 +170,15 @@ export default function NxImageReveal({
               strokeLinejoin="round"
               className="nx-text-white"
             >
-              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
+              <path d="M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+              <path d="M21 3v5h-5"/>
             </svg>
           </button>
         </div>
         
         <div className="nx-p-[100px] nx-flex nx-items-center nx-justify-center nx-p-8 reveal">
           <div 
+            key={key}
             ref={containerRef}
             data-scroll-image-reveal="true"
             data-animate={animate}
