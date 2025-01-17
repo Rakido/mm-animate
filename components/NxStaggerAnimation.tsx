@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import NxReloadAnimation from './NxReloadAnimation'
 
 interface NxStaggerAnimationProps {
@@ -18,6 +18,31 @@ declare global {
 
 export default function NxStaggerAnimation({ children, className = '', ...props }: NxStaggerAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+
+  const initializeAnimation = useCallback(() => {
+    if (!window.moonMoonStagger || !containerRef.current) return;
+
+    // Kill existing animations
+    if (window.ScrollTrigger) {
+      window.ScrollTrigger.getAll().forEach(st => st.kill());
+    }
+
+    // Reset container state
+    const container = containerRef.current;
+    if (container) {
+      // Reset any transforms
+      container.querySelectorAll('[data-stagger-item]').forEach(item => {
+        (item as HTMLElement).style.transform = '';
+        (item as HTMLElement).style.opacity = '';
+      });
+      
+      // Force reflow
+      void container.offsetHeight;
+
+      // Use initStaggerAnimation instead of reveal
+      window.moonMoonStagger.initStaggerAnimation(containerRef.current);
+    }
+  }, []);
 
   useEffect(() => {
     const loadScript = (src: string): Promise<void> => {
@@ -44,26 +69,33 @@ export default function NxStaggerAnimation({ children, className = '', ...props 
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
         await loadScript('https://lefutoir.fr/lib/mm-stagger-animation.js');
 
-        if (window.moonMoonStagger && containerRef.current) {
-          window.moonMoonStagger.initStaggerAnimation(containerRef.current as HTMLElement);
-        }
+        initializeAnimation();
       } catch (error) {
         console.error('Error loading animation scripts:', error);
       }
     };
 
     initAnimation();
-  }, []);
+  }, [initializeAnimation]);
 
   return (
     <div className="nx-relative nx-w-full">
       <div className="nx-relative nx-my-8 nx-mx-auto nx-max-w-4xl nx-bg-gray-800 nx-rounded-xl nx-border nx-border-gray-700">
         <div className="nx-absolute nx-top-4 nx-right-4 nx-z-10">
-          <NxReloadAnimation targetRef={containerRef} />
+          <NxReloadAnimation 
+            targetRef={containerRef} 
+            type="stagger" 
+            onReload={() => {
+              if (containerRef.current) {
+                window.moonMoonStagger.initStaggerAnimation(containerRef.current);
+              }
+            }}
+          />
         </div>
         
         <div 
           ref={containerRef}
+          data-stagger-reveal="true"
           className={`nx-p-8 ${className}`}
           {...props}
         >

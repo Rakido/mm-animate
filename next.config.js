@@ -12,7 +12,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "script-src 'self' 'unsafe-eval' 'unsafe-inline' cdnjs.cloudflare.com unpkg.com lefutoir.fr; script-src-elem 'self' 'unsafe-inline' cdnjs.cloudflare.com unpkg.com lefutoir.fr;"
+            value: "script-src 'self' 'unsafe-eval' 'unsafe-inline' cdnjs.cloudflare.com unpkg.com cdn.jsdelivr.net; script-src-elem 'self' 'unsafe-inline' cdnjs.cloudflare.com unpkg.com cdn.jsdelivr.net;"
           }
         ]
       }
