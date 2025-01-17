@@ -1,0 +1,53 @@
+# Effet Shutter
+
+import NxImageReveal from '../../components/NxImageReveal'
+
+## Configuration de base
+
+L'effet shutter crée un volet qui révèle l'image :
+
+```html
+<div 
+  data-scroll-image-reveal 
+  data-animate="shutter"
+>
+  <img data-scroll-image-reveal-target src="image.jpg" />
+</div>
+```
+
+<NxImageReveal
+  data-animate="shutter"
+  src="/images/demo-1.jpg"
+/>
+
+
+## Personnalisation
+
+### Couleur du volet
+```html
+<div 
+  data-scroll-image-reveal 
+  data-animate="shutter"
+  data-shutter-color="#ff4444"
+>
+  <img data-scroll-image-reveal-target src="image.jpg" />
+</div>
+```
+
+<NxImageReveal
+  data-animate="shutter"
+  data-shutter-color="#ff4444"
+  src="/images/demo-1.jpg"
+/>
+
+
+### Easing personnalisé
+```html
+<div 
+  data-scroll-image-reveal 
+  data-animate="shutter"
+  data-shutter-easing="power4.inOut"
+>
+  <img data-scroll-image-reveal-target src="image.jpg" />
+</div>
+``` 

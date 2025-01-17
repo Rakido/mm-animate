@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import NxReloadAnimation from './NxReloadAnimation'
 
 interface NxTextAnimationProps {
@@ -7,18 +7,14 @@ interface NxTextAnimationProps {
   [key: string]: any;
 }
 
-declare global {
-  interface Window {
-    moonMoonText: any;
-    gsap: any;
-    ScrollTrigger: any;
-    CustomEase: any;
-    SplitType: any;
-  }
-}
-
 export default function NxTextAnimation({ children, className = '', ...props }: NxTextAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [isReady, setIsReady] = useState(false)
+
+  const initializeAnimation = useCallback(() => {
+    if (!window.moonMoonText || !containerRef.current) return;
+    window.moonMoonText.initTextAnimation(containerRef.current);
+  }, []);
 
   useEffect(() => {
     const loadScript = (src: string): Promise<void> => {
@@ -38,30 +34,35 @@ export default function NxTextAnimation({ children, className = '', ...props }: 
       });
     };
 
-    const initAnimation = async () => {
+    const loadScripts = async () => {
       try {
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
+        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for GSAP
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
         await loadScript('https://unpkg.com/split-type');
-        await loadScript('https://lefutoir.fr/lib/mm-text-animation.js');
-
-        if (window.moonMoonText && containerRef.current) {
-          window.moonMoonText.initTextAnimation(containerRef.current as HTMLElement);
-        }
+        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-text-animation.js');
+        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for library
+        setIsReady(true);
       } catch (error) {
         console.error('Error loading animation scripts:', error);
       }
     };
 
-    initAnimation();
+    loadScripts();
   }, []);
+
+  useEffect(() => {
+    if (!isReady) return;
+    const timer = setTimeout(initializeAnimation, 100);
+    return () => clearTimeout(timer);
+  }, [isReady, initializeAnimation]);
 
   return (
     <div className="nx-relative nx-w-full">
       <div className="nx-relative nx-my-8 nx-mx-auto nx-max-w-4xl nx-bg-gray-800 nx-rounded-xl nx-bg-gray-500 nx-border-gray-800">
         <div className="nx-absolute" style={{top: '1rem', right: '1rem', zIndex: 10}}>
-          <NxReloadAnimation targetRef={containerRef} />
+          <NxReloadAnimation targetRef={containerRef} onReload={initializeAnimation} />
         </div>
         
         <div 
