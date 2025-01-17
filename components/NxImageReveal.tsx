@@ -1,6 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
 import { useRouter } from 'next/router'
-import NxReloadAnimation from './NxReloadAnimation'
 
 interface NxImageRevealProps {
   className?: string;
@@ -53,7 +52,9 @@ export default function NxImageReveal({
     }
 
     // Initialize animation
-    window.moonMoonImage.initScrollImageReveal(containerRef.current);
+    requestAnimationFrame(() => {
+      window.moonMoonImage.initScrollImageReveal(containerRef.current);
+    });
   }, []);
 
   // Load scripts
@@ -95,12 +96,11 @@ export default function NxImageReveal({
   // Initialize animation when ready
   useEffect(() => {
     if (!isReady) return;
+    
+    // Initial animation
     const timer = setTimeout(initializeAnimation, 100);
-    return () => clearTimeout(timer);
-  }, [isReady, initializeAnimation]);
 
-  // Handle route changes
-  useEffect(() => {
+    // Handle route changes
     const handleRouteChange = () => {
       if (window.ScrollTrigger) {
         window.ScrollTrigger.getAll().forEach(st => st.kill());
@@ -108,30 +108,46 @@ export default function NxImageReveal({
     };
 
     const handleRouteComplete = () => {
-      initializeAnimation();
+      setTimeout(initializeAnimation, 100);
     };
 
     router.events.on('routeChangeStart', handleRouteChange);
     router.events.on('routeChangeComplete', handleRouteComplete);
     
     return () => {
+      clearTimeout(timer);
       router.events.off('routeChangeStart', handleRouteChange);
       router.events.off('routeChangeComplete', handleRouteComplete);
       if (window.ScrollTrigger) {
         window.ScrollTrigger.getAll().forEach(st => st.kill());
       }
     };
-  }, [router.events, initializeAnimation]);
+  }, [isReady, initializeAnimation, router.events]);
 
   return (
     <div className="nx-relative nx-w-full">
       <div className="nx-relative nx-my-8 nx-mx-auto nx-max-w-4xl nx-bg-gray-800 nx-rounded-xl nx-border nx-border-gray-900">
         <div className="nx-absolute nx-top-4 nx-right-4 nx-z-10">
-          <NxReloadAnimation 
-            targetRef={containerRef} 
-            type="image" 
-            onReload={initializeAnimation}
-          />
+          <button
+            onClick={initializeAnimation}
+            className="nx-p-2 nx-rounded-lg nx-bg-gray-700 hover:nx-bg-gray-600 nx-transition-colors"
+            aria-label="Reload animation"
+          >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              width="24" 
+              height="24" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+              className="nx-text-white"
+            >
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
+            </svg>
+          </button>
         </div>
         
         <div className="nx-p-[100px] nx-flex nx-items-center nx-justify-center nx-p-8 reveal">
