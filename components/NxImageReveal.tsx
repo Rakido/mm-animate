@@ -45,34 +45,18 @@ export default function NxImageReveal({
   const [isReady, setIsReady] = useState(false)
 
   const initializeAnimation = useCallback(() => {
-    // Wait for next tick to ensure library is loaded
-    setTimeout(() => {
-      if (!window.moonMoonImage || !containerRef.current) return;
+    if (!window.moonMoonImage || !containerRef.current) return;
 
-      // Kill existing animations
-      if (window.ScrollTrigger) {
-        window.ScrollTrigger.getAll().forEach(st => st.kill());
-      }
+    // Kill existing animations
+    if (window.ScrollTrigger) {
+      window.ScrollTrigger.getAll().forEach(st => st.kill());
+    }
 
-      // Reset container state
-      const container = containerRef.current;
-      if (container) {
-        // Reset any transforms
-        container.style.transform = '';
-        container.style.opacity = '';
-        
-        // Force reflow
-        void container.offsetHeight;
-
-        // Initialize with fresh state
-        if (typeof window.moonMoonImage.initScrollImageReveal === 'function') {
-          window.moonMoonImage.initScrollImageReveal(container);
-        }
-      }
-    }, 50);
+    // Initialize animation
+    window.moonMoonImage.initScrollImageReveal(containerRef.current);
   }, []);
 
-  // Load scripts first
+  // Load scripts
   useEffect(() => {
     const loadScript = (src: string): Promise<void> => {
       return new Promise((resolve, reject) => {
@@ -94,14 +78,12 @@ export default function NxImageReveal({
     const loadScripts = async () => {
       try {
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
+        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for GSAP
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
         await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-image-reveal.js');
-        
-        // Wait for scripts to be properly initialized
-        setTimeout(() => {
-          setIsReady(true);
-        }, 100);
+        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for library
+        setIsReady(true);
       } catch (error) {
         console.error('Error loading animation scripts:', error);
       }
@@ -113,31 +95,33 @@ export default function NxImageReveal({
   // Initialize animation when ready
   useEffect(() => {
     if (!isReady) return;
-
     const timer = setTimeout(initializeAnimation, 100);
+    return () => clearTimeout(timer);
+  }, [isReady, initializeAnimation]);
 
+  // Handle route changes
+  useEffect(() => {
     const handleRouteChange = () => {
-      if (containerRef.current) {
-        containerRef.current.style.visibility = 'hidden';
-        setTimeout(() => {
-          if (containerRef.current) {
-            containerRef.current.style.visibility = 'visible';
-            initializeAnimation();
-          }
-        }, 100);
-      }
-    };
-
-    router.events.on('routeChangeComplete', handleRouteChange);
-    
-    return () => {
-      clearTimeout(timer);
-      router.events.off('routeChangeComplete', handleRouteChange);
       if (window.ScrollTrigger) {
         window.ScrollTrigger.getAll().forEach(st => st.kill());
       }
     };
-  }, [router.events, initializeAnimation, isReady]);
+
+    const handleRouteComplete = () => {
+      initializeAnimation();
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+    router.events.on('routeChangeComplete', handleRouteComplete);
+    
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+      router.events.off('routeChangeComplete', handleRouteComplete);
+      if (window.ScrollTrigger) {
+        window.ScrollTrigger.getAll().forEach(st => st.kill());
+      }
+    };
+  }, [router.events, initializeAnimation]);
 
   return (
     <div className="nx-relative nx-w-full">
@@ -146,11 +130,7 @@ export default function NxImageReveal({
           <NxReloadAnimation 
             targetRef={containerRef} 
             type="image" 
-            onReload={() => {
-              if (containerRef.current && window.moonMoonImage?.initScrollImageReveal) {
-                window.moonMoonImage.initScrollImageReveal(containerRef.current);
-              }
-            }}
+            onReload={initializeAnimation}
           />
         </div>
         

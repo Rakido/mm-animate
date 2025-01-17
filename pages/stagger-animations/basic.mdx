@@ -4,11 +4,30 @@ import NxStaggerAnimation from '../../components/NxStaggerAnimation'
 
 Le stagger permet d'animer des éléments en séquence avec un délai entre chaque élément.
 
+## Dépendances
+
+Pour utiliser les animations stagger, vous aurez besoin de deux dépendances :
+
+- [GSAP](https://www.jsdelivr.com/package/npm/gsap)
+- [GSAP Custom Easing](https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js)
+- [GSAP ScrollTrigger](https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js)
+
 ## Configuration de base
 
 Pour créer une animation stagger, vous aurez besoin de :
 - `data-stagger-reveal` sur le conteneur parent
-- `data-stagger-item` sur chaque élément enfant
+
+
+```html
+  <ul data-stagger-reveal>
+    <li></li>
+    <li></li>
+    <li></li>
+    ...
+  </ul>
+```
+
+Cela animera chaque enfant à l'intérieur.
 
 <NxStaggerAnimation data-stagger-reveal>
   {[1, 2, 3, 4].map((item) => (
@@ -21,15 +40,26 @@ Pour créer une animation stagger, vous aurez besoin de :
     </div>
   ))}
 </NxStaggerAnimation>
+
+--- 
+
 ## Contrôle du délai
 
-Utilisez `data-stagger` pour définir le délai entre chaque élément (en secondes) :
+Utilisez `data-stagger-delay` pour définir le délai entre chaque élément (en secondes) :
 
-<NxStaggerAnimation data-stagger-reveal data-stagger="0.2">
+```html
+  <ul data-stagger-reveal data-stagger-delay="1">
+    <li></li>
+    <li></li>
+    <li></li>
+    ...
+  </ul>
+```
+
+<NxStaggerAnimation data-stagger-reveal data-stagger-delay="1">
   {[1, 2, 3, 4].map((item) => (
     <div 
       key={item}
-      data-stagger-item
       className="nx-bg-gray-700 nx-p-4 nx-rounded-lg nx-mb-4"
     >
       Item {item}

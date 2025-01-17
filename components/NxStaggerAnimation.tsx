@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import NxReloadAnimation from './NxReloadAnimation'
 
 interface NxStaggerAnimationProps {
@@ -10,38 +10,22 @@ interface NxStaggerAnimationProps {
 declare global {
   interface Window {
     moonMoonStagger: any;
+    moonMoonText: any;
+    moonMoonImage: any;
     gsap: any;
     ScrollTrigger: any;
     CustomEase: any;
+    SplitType: any;
   }
 }
 
 export default function NxStaggerAnimation({ children, className = '', ...props }: NxStaggerAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [isReady, setIsReady] = useState(false)
 
   const initializeAnimation = useCallback(() => {
     if (!window.moonMoonStagger || !containerRef.current) return;
-
-    // Kill existing animations
-    if (window.ScrollTrigger) {
-      window.ScrollTrigger.getAll().forEach(st => st.kill());
-    }
-
-    // Reset container state
-    const container = containerRef.current;
-    if (container) {
-      // Reset any transforms
-      container.querySelectorAll('[data-stagger-item]').forEach(item => {
-        (item as HTMLElement).style.transform = '';
-        (item as HTMLElement).style.opacity = '';
-      });
-      
-      // Force reflow
-      void container.offsetHeight;
-
-      // Use initStaggerAnimation instead of reveal
-      window.moonMoonStagger.initStaggerAnimation(containerRef.current);
-    }
+    window.moonMoonStagger.initStaggerAnimation(containerRef.current);
   }, []);
 
   useEffect(() => {
@@ -62,21 +46,28 @@ export default function NxStaggerAnimation({ children, className = '', ...props 
       });
     };
 
-    const initAnimation = async () => {
+    const loadScripts = async () => {
       try {
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
+        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for GSAP
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
-        await loadScript('https://lefutoir.fr/lib/mm-stagger-animation.js');
-
-        initializeAnimation();
+        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-stagger-animation.js');
+        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for library
+        setIsReady(true);
       } catch (error) {
         console.error('Error loading animation scripts:', error);
       }
     };
 
-    initAnimation();
-  }, [initializeAnimation]);
+    loadScripts();
+  }, []);
+
+  useEffect(() => {
+    if (!isReady) return;
+    const timer = setTimeout(initializeAnimation, 100);
+    return () => clearTimeout(timer);
+  }, [isReady, initializeAnimation]);
 
   return (
     <div className="nx-relative nx-w-full">
@@ -85,11 +76,7 @@ export default function NxStaggerAnimation({ children, className = '', ...props 
           <NxReloadAnimation 
             targetRef={containerRef} 
             type="stagger" 
-            onReload={() => {
-              if (containerRef.current) {
-                window.moonMoonStagger.initStaggerAnimation(containerRef.current);
-              }
-            }}
+            onReload={initializeAnimation}
           />
         </div>
         
