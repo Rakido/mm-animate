@@ -42,7 +42,8 @@ export default function NxStaggerCardsAnimation({
       try {
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
-        await loadScript('https://lefutoir.fr/lib/mm-stagger-animation.js');
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
+        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-stagger-animation.js');
 
         if (window.moonMoonStagger && containerRef.current) {
           window.moonMoonStagger.initStaggerAnimation(containerRef.current as HTMLElement);
