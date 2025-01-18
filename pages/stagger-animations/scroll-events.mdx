@@ -26,6 +26,30 @@ L'attribut `data-scrub` permet de déclencher les animations lors du scroll :
 
 --- 
 
+La relation au scroll peux être ajustée en passant des valeurs à l'attribut `data-scub`.
+
+```html
+<div 
+  data-stagger-reveal 
+  data-animate="slide"
+  data-stagger="0.1"
+  data-scrub="0.5"
+>
+  Les items s'animent différemnts scroll
+</div>
+```
+
+<NxStaggerCardsAnimation 
+  data-stagger-reveal 
+  data-animate="slide"
+  data-stagger="0.1"
+  data-scrub="0.5"
+/>
+
+---
+
+## Rejouer des animations dans la section
+
 L'attribut `data-revert`permet de redéclencher l'animation si l'on sors de la section et que l'on revient.
 
 ```html
