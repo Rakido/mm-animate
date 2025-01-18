@@ -1,0 +1,48 @@
+# Contrôles de Timing
+
+import NxStaggerCardsAnimation from '../../components/NxStaggerCardsAnimation'
+
+## Effet de Décalage
+
+L'attribut `data-stagger` contrôle le délai entre l'animation de chaque élément :
+
+```html
+<div 
+  data-stagger-reveal
+  data-animate="slide"
+  data-direction="-y"
+  data-stagger-delay="1"
+>
+  1 seconde de délai entre chaque élément
+</div>
+```
+
+<NxStaggerCardsAnimation 
+  data-animate="slide"
+  data-direction="-y"
+  data-stagger-delay="1"
+/>
+
+--- 
+
+## Délayer l'animation
+
+L'attribut `data-delay` contrôle le délai avant l'animation :
+
+```html
+<div 
+  data-stagger-reveal
+  data-animate="slide"
+  data-direction="-y"
+  data-delay="1"
+>
+  1 seconde de délai avant de lancer l'animation
+</div>
+```
+
+<NxStaggerCardsAnimation 
+  data-animate="slide"
+  data-direction="-y"
+  data-delay="1"
+/>
+

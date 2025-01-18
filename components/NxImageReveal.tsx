@@ -43,27 +43,22 @@ export default function NxImageReveal({
   const router = useRouter()
   const [isReady, setIsReady] = useState(false)
   const [key, setKey] = useState(0)
-  const [isAnimating, setIsAnimating] = useState(false)
 
   const initializeAnimation = useCallback(() => {
-    if (!window.moonMoonImage || !containerRef.current || isAnimating) return;
+    if (!window.moonMoonImage || !containerRef.current) return;
 
-    setIsAnimating(true);
-
-    // Kill existing animations
+    // Kill existing animations first
     if (window.ScrollTrigger) {
       window.ScrollTrigger.getAll().forEach(st => st.kill());
     }
 
-    // Use RAF to batch DOM operations
+    // Initialize with fresh state
     requestAnimationFrame(() => {
       if (containerRef.current) {
         window.moonMoonImage.initScrollImageReveal(containerRef.current);
-        // Reset animation state after animation duration
-        setTimeout(() => setIsAnimating(false), duration * 1000);
       }
     });
-  }, [duration, isAnimating]);
+  }, []);
 
   // Load scripts once
   useEffect(() => {
@@ -71,17 +66,16 @@ export default function NxImageReveal({
     
     const loadScript = (src: string): Promise<void> => {
       return new Promise((resolve, reject) => {
-        const existingScript = document.querySelector(`script[src="${src}"]`);
-        if (existingScript) {
+        if (document.querySelector(`script[src="${src}"]`)) {
           resolve();
           return;
         }
 
         const script = document.createElement('script');
         script.src = src;
-        script.async = false;
+        script.async = true;
         script.onload = () => resolve();
-        script.onerror = (error) => reject(error);
+        script.onerror = reject;
         document.body.appendChild(script);
       });
     };
@@ -92,6 +86,7 @@ export default function NxImageReveal({
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
         await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-image-reveal.js');
+        
         if (mounted) {
           setIsReady(true);
         }
@@ -108,7 +103,7 @@ export default function NxImageReveal({
   useEffect(() => {
     if (!isReady) return;
     
-    const timer = setTimeout(initializeAnimation, 50);
+    const timer = setTimeout(initializeAnimation, 100);
     return () => {
       clearTimeout(timer);
       if (window.ScrollTrigger) {
@@ -125,37 +120,22 @@ export default function NxImageReveal({
       }
     };
 
-    const handleRouteComplete = () => {
-      requestAnimationFrame(() => {
-        setKey(k => k + 1);
-      });
-    };
-
     router.events.on('routeChangeStart', handleRouteChange);
-    router.events.on('routeChangeComplete', handleRouteComplete);
+    router.events.on('routeChangeComplete', () => setKey(k => k + 1));
     
     return () => {
       router.events.off('routeChangeStart', handleRouteChange);
-      router.events.off('routeChangeComplete', handleRouteComplete);
+      router.events.off('routeChangeComplete', () => setKey(k => k + 1));
     };
-  }, [router.asPath]);
+  }, [router.events]);
 
   return (
     <div className="nx-relative nx-w-full">
       <div className="nx-relative nx-my-8 nx-mx-auto nx-max-w-4xl nx-bg-gray-800 nx-rounded-xl nx-border nx-border-gray-900">
         <div className="nx-absolute nx-top-4 nx-right-4 nx-z-10">
           <button
-            onClick={() => {
-              if (!isAnimating) {
-                requestAnimationFrame(() => {
-                  setKey(k => k + 1);
-                });
-              }
-            }}
-            disabled={isAnimating}
-            className={`nx-p-2 nx-rounded-lg nx-bg-gray-700 hover:nx-bg-gray-600 nx-transition-colors ${
-              isAnimating ? 'nx-opacity-50 nx-cursor-not-allowed' : ''
-            }`}
+            onClick={() => requestAnimationFrame(() => setKey(k => k + 1))}
+            className="nx-p-2 nx-rounded-lg nx-bg-gray-700 hover:nx-bg-gray-600 nx-transition-colors"
             aria-label="Reload animation"
           >
             <svg 
