@@ -58,3 +58,22 @@ Utilisez `data-scale` pour une animation d'échelle, la valeur spécifiée est l
   data-direction="-y"
   data-scale="0.5"
 />
+
+## Paramètres
+
+Pour limiter la transformation à un axe vous pouvez utiliser `data-scale-axis`.
+Pour contrôler le point de transform-origin vous pouvez utiliser `data-scale-position`.
+
+```html
+<div data-stagger-reveal data-scale="0.5" data-scale-axis="x" data-scale-position="right">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+</div>
+```
+
+<NxStaggerCardsAnimation 
+  data-scale="0.5"
+  data-scale-axis="x"
+  data-scale-position="right"
+/>

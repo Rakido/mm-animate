@@ -1,0 +1,22 @@
+# Mixer les animations
+
+import NxStaggerMixing from '../../components/NxStaggerMixing'
+
+Il est possible de mixer deux types d'animations en placant des data-attributes particulier sur un enfant.
+
+```html
+<section style="display: flex; flex-direction: column; gap: 10px;" data-stagger-reveal data-stagger-delay="0.5">
+    <h1>Hello world</h1>
+    <div class="line" data-scale="0.0" data-scale-axis="x" data-scale-position="left"></div>
+    <h1>Hello world</h1>
+    <div class="line" data-scale="0.0" data-scale-axis="x" data-scale-position="left"></div>
+    <h1>Hello world</h1>
+    <div class="line" data-scale="0.0" data-scale-axis="x" data-scale-position="left"></div>
+    <h1>Hello world</h1>
+    <div class="line" data-scale="0.0" data-scale-axis="x" data-scale-position="left"></div>
+</section>
+```
+
+<NxStaggerMixing />
+
+---
