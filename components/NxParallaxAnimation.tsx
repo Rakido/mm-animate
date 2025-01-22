@@ -22,7 +22,7 @@ declare global {
 export default function NxParallaxAnimation({ 
   src, 
   imageFull = false,
-  height = '200px',
+  height = '400px',
   'data-parallax': parallax = true,
   'data-parallax-direction': direction = 'y',
   'data-scrub': scrub = true,
