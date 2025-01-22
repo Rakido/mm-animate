@@ -58,6 +58,36 @@ En passant une valeur à `data-scrub` on peux ajuster le scroll de l'animation :
 
 ---
 
+## Inverser l'animation
+
+On peux inverser l'animation lorsqu'on scroll up de la section en utilisant `data-revert`.
+
+```html
+<div 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="slide"
+  data-easing="elastic.out(1, 0.3)"
+  data-revert="false"
+  data-scrub="2"
+>
+  L'animation ne se relancera pas si on scroll up de la section
+</div>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="slide"
+  data-easing="elastic.out(1, 0.3)"
+  data-revert="false"
+  data-scrub="2"
+>
+  L'animation ne se relancera pas si on scroll up de la section
+</NxTextAnimation>
+
+---
+
 ## Scroll avec un easing
 
 ```html
@@ -82,8 +112,4 @@ En passant une valeur à `data-scrub` on peux ajuster le scroll de l'animation :
   Les caractères s'animent avec un easing
 </NxTextAnimation>
 
-
-
 ---
-
-

@@ -2,9 +2,41 @@
 
 import NxTextAnimation from '../../components/NxTextAnimation'
 
-## Animation en Fondu
+## Comment animer
 
-L'animation la plus simple est le fondu. Vous pouvez contrôler l'opacité de départ avec `data-fade-start`.
+Pour animer un texte, vous aurez besoin de trois attributs principaux : `data-scroll-text-reveal` `data-animate` et `data-splitting`.
+`data-scroll-text-reveal` est l'attribut qui active l'animation.
+`data-splitting` est l'attribut comment découper la chaîne de caractères.
+`data-animate` est l'attribut qui détermine le type d'animation.
+
+`data-animate` peut prendre plusieurs valeurs :
+- `fade-in` : Fade in des caractères
+- `slide` : Slide des caractères
+- `shutter` : Effet de volet
+
+```html
+<p 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="fade-in"
+>
+  Paramètres de base
+</p>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="fade-in"
+>
+  Paramètres de base
+</NxTextAnimation>
+
+--- 
+
+## Animation en fondu
+
+Vous pouvez contrôler l'opacité de départ avec `data-fade-start`.
 
 La vitesse d'animation entre les caractères est contrôlée par `data-stagger`.
 
@@ -14,7 +46,6 @@ La vitesse d'animation entre les caractères est contrôlée par `data-stagger`.
   data-splitting="chars"
   data-animate="fade-in"
   data-fade-start="0.1"
-  data-duration="0.1"
   data-stagger="0.03"
 >
   Chaque caractère s'anime de 0.1 opacité à 1
@@ -26,7 +57,6 @@ La vitesse d'animation entre les caractères est contrôlée par `data-stagger`.
   data-animate="fade-in"
   data-splitting="chars"
   data-fade-start="0.1"
-  data-duration=".1"
   data-stagger="0.03"
 >
   Chaque caractère s'anime de 0.1 opacité à 1

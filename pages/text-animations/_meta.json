@@ -1,6 +1,6 @@
 {
-  "basic": "Basics",
-  "types": "Types of animations",
+  "installation": "Installation",
+  "types": "Types d'animations",
   "timings": "Timings et délais",
   "transformation": "Transformations",
   "easings": "Easings",
@@ -9,5 +9,6 @@
   "paragraphs": "Paragraphs",
   "scroll-events": "Scroll Events",
   "complexes-animations": "Complexes Animations",
+  "details": "Détails des paramètres",
   "play": "TESTEZ-MOI"
 }
