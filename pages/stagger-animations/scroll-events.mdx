@@ -24,8 +24,6 @@ L'attribut `data-scrub` permet de déclencher les animations lors du scroll :
   data-scrub="true"
 />
 
---- 
-
 La relation au scroll peux être ajustée en passant des valeurs à l'attribut `data-scub`.
 
 ```html
@@ -46,18 +44,16 @@ La relation au scroll peux être ajustée en passant des valeurs à l'attribut `
   data-scrub="0.5"
 />
 
----
-
 ## Rejouer des animations dans la section
 
-L'attribut `data-revert`permet de redéclencher l'animation si l'on sors de la section et que l'on revient.
+L'attribut `data-replay`permet de redéclencher l'animation si l'on sors de la section et que l'on revient.
 
 ```html
 <div 
   data-stagger-reveal 
   data-animate="slide"
   data-stagger="0.1"
-  data-revert="true"
+  data-replay="true"
 >
   Si je remonte puis redescend, les items se ré-animent
 </div>
@@ -67,5 +63,5 @@ L'attribut `data-revert`permet de redéclencher l'animation si l'on sors de la s
   data-stagger-reveal 
   data-animate="slide"
   data-stagger="0.1"
-  data-revert="true"
+  data-replay="true"
 />

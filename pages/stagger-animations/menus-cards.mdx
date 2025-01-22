@@ -1,6 +1,7 @@
 # Menus & Cards
 
 import NxStaggerAnimation from '../../components/NxStaggerAnimation'
+import NxStaggerCardsAnimation from '../../components/NxStaggerCardsAnimation'
 
 ## Menu Items
 
@@ -77,3 +78,25 @@ Animation de menu vertical avec stagger :
     </div>
   ))}
 </NxStaggerAnimation> 
+
+## Animation de cards
+
+```html
+<div 
+  data-stagger-reveal 
+  data-animate="slide"
+  data-direction="-y"
+  data-ease="elastic"
+>
+  <div>Card</div>
+  <div>Card</div>
+  <div>Card</div>
+  <div>Card</div>
+</div>
+```
+
+<NxStaggerCardsAnimation 
+  data-animate="slide"
+  data-direction="-y"
+  data-ease="elastic"
+/>

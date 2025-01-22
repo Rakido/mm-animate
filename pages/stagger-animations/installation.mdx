@@ -1,4 +1,4 @@
-# Les bases du Stagger
+# Installation
 
 import NxStaggerAnimation from '../../components/NxStaggerAnimation'
 
@@ -7,6 +7,8 @@ Le stagger permet d'animer des éléments en séquence avec un délai entre chaq
 ## Import
 
 La librairie est disponible ici : [MM-StaggerAnimation.js](https://raw.githubusercontent.com/Rakido/mm-animation-library/refs/heads/main/js/mm-stagger-animation.js)
+
+Pas de CSS associé pour ce bloc.
 
 ## Dépendances
 
@@ -46,28 +48,3 @@ Cela animera chaque enfant à l'intérieur.
 </NxStaggerAnimation>
 
 --- 
-
-## Contrôle du délai
-
-Utilisez `data-stagger-delay` pour définir le délai entre chaque élément (en secondes) :
-
-```html
-  <ul data-stagger-reveal data-stagger-delay="1">
-    <li></li>
-    <li></li>
-    <li></li>
-    ...
-  </ul>
-```
-
-<NxStaggerAnimation data-stagger-reveal data-stagger-delay="1">
-  {[1, 2, 3, 4].map((item) => (
-    <div 
-      key={item}
-      className="nx-bg-gray-700 nx-p-4 nx-rounded-lg nx-mb-4"
-    >
-      Item {item}
-    </div>
-  ))}
-</NxStaggerAnimation>
-
