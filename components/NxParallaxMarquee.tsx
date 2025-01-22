@@ -58,7 +58,7 @@ export default function NxParallaxMarquee({
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
         await new Promise(resolve => setTimeout(resolve, 100));
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
-        await loadScript('https://lefutoir.fr/lib/mm-parallax-animation.js');
+        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-parallax-animation.js');
 
         if (window.moonMoonParallax && containerRef.current) {
           setTimeout(() => {
