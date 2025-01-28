@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface NxParallaxAnimationProps {
   src: string;
@@ -6,8 +6,9 @@ interface NxParallaxAnimationProps {
   height?: string | number;
   'data-parallax'?: boolean;
   'data-parallax-direction'?: 'x' | 'y' | 'xy';
-  'data-scrub'?: boolean;
+  'data-scrub'?: boolean | number;
   'data-speed'?: string | number;
+  'data-zoom'?: boolean | number;
   [key: string]: any;
 }
 
@@ -16,6 +17,7 @@ declare global {
     moonMoonParallax: any;
     gsap: any;
     ScrollTrigger: any;
+    moonMoonParallaxInitialized?: boolean;
   }
 }
 
@@ -27,9 +29,11 @@ export default function NxParallaxAnimation({
   'data-parallax-direction': direction = 'y',
   'data-scrub': scrub = true,
   'data-speed': speed,
+  'data-zoom': zoom,
   ...props 
 }: NxParallaxAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
     const loadScript = (src: string): Promise<void> => {
@@ -51,15 +55,38 @@ export default function NxParallaxAnimation({
 
     const initAnimation = async () => {
       try {
-        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
-        await new Promise(resolve => setTimeout(resolve, 100));
-        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
-        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-parallax-animation.js');
+        // Load GSAP and ScrollTrigger only if not already loaded
+        if (!window.gsap) {
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        
+        if (!window.ScrollTrigger) {
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
 
-        if (window.moonMoonParallax && containerRef.current) {
-          setTimeout(() => {
-            window.moonMoonParallax.initParallax(containerRef.current);
-          }, 100);
+        // Load parallax library only if not initialized
+        if (!window.moonMoonParallaxInitialized) {
+          await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-parallax-animation.js');
+          window.moonMoonParallaxInitialized = true;
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        
+        setIsReady(true);
+
+        // Initialize animation
+        if (containerRef.current && window.moonMoonParallax) {
+          // Kill existing ScrollTrigger instances for this container
+          if (window.ScrollTrigger) {
+            window.ScrollTrigger.getAll().forEach(st => {
+              if (st.vars.trigger === containerRef.current) {
+                st.kill();
+              }
+            });
+          }
+          
+          window.moonMoonParallax.initParallax(containerRef.current);
         }
       } catch (error) {
         console.error('Error loading animation scripts:', error);
@@ -67,6 +94,17 @@ export default function NxParallaxAnimation({
     };
 
     initAnimation();
+
+    // Cleanup function
+    return () => {
+      if (window.ScrollTrigger && containerRef.current) {
+        window.ScrollTrigger.getAll().forEach(st => {
+          if (st.vars.trigger === containerRef.current) {
+            st.kill();
+          }
+        });
+      }
+    };
   }, []);
 
   return (
@@ -79,7 +117,8 @@ export default function NxParallaxAnimation({
           ${!imageFull && 'nx-flex nx-items-center nx-justify-center'}
         `}
         style={{ 
-          height: typeof height === 'number' ? `${height}px` : height
+          height: typeof height === 'number' ? `${height}px` : height,
+          visibility: isReady ? 'visible' : 'hidden'
         }}
         {...(imageFull ? props : {})}
       >
@@ -92,6 +131,8 @@ export default function NxParallaxAnimation({
           data-parallax-direction={direction}
           data-scrub={scrub ? "true" : "false"}
           data-speed={speed}
+          data-zoom={zoom}
+          data-image-parallax="true"
           {...(!imageFull ? props : {})}
         />
       </div>

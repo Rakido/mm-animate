@@ -3,6 +3,8 @@ import NxReloadAnimation from './NxReloadAnimation'
 
 interface NxStaggerCardsAnimationProps {
   className?: string;
+  button?: boolean;
+  triggerId?: string;
   [key: string]: any;
 }
 
@@ -16,6 +18,8 @@ declare global {
 
 export default function NxStaggerCardsAnimation({ 
   className = '',
+  button = false,
+  triggerId = 'stagger-cards',
   ...props 
 }: NxStaggerCardsAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -63,9 +67,22 @@ export default function NxStaggerCardsAnimation({
           <NxReloadAnimation targetRef={containerRef} type="stagger" />
         </div>
         
+        {button && (
+          <div className="nx-p-4 nx-border-b nx-border-gray-700">
+            <button
+              data-stagger-trigger={triggerId}
+              className="nx-px-4 nx-py-2 nx-bg-white nx-text-gray-900 nx-rounded-lg nx-font-medium hover:nx-bg-gray-100 nx-transition-colors"
+            >
+              Lancer l'animation
+            </button>
+          </div>
+        )}
+        
         <div 
           ref={containerRef}
           data-stagger-reveal="true"
+          data-click-event={button ? "true" : undefined}
+          id={button ? triggerId : undefined}
           className={`
             nx-w-full nx-space-y-4 nx-p-4
             ${className}

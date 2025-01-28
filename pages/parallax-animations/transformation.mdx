@@ -39,7 +39,8 @@ Il est accompagné du paramètre `data-zoom-percentage` qui permet de définir l
 ```html
 <div data-parallax 
      data-image-parallax
-     data-zoom="true" 
+     data-zoom="true"
+     data-zoom-percentage="2.5" 
   >
   <img 
     src="image.jpg" 
@@ -48,10 +49,10 @@ Il est accompagné du paramètre `data-zoom-percentage` qui permet de définir l
 ```
 
 <NxParallaxAnimation 
-  src="https://picsum.photos/1200/800"
+  src="https://picsum.photos/900/900"
   imageFull
   data-parallax
-  data-image-parallax
-  data-zoom="true"
-  data-zoom-percentage="2.5"
+  data-parallax-direction="y"
+  data-scrub={true}
+  data-zoom={true}
 />

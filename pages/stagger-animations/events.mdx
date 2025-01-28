@@ -1,0 +1,31 @@
+# Evenements au clic
+
+import NxStaggerCardsAnimation from '../../components/NxStaggerCardsAnimation'
+
+## Lancer l'animation au clic
+
+Appliquer sur un élément un `data-stagger-trigger` avec en valeur l'ID de l'élément où vous placez le `data-stagger-reveal`
+Pour éviter que l'animation se lance au chargement de la page, ajoutez `data-click-event="true"`
+
+```html
+<button data-stagger-trigger="myId">
+    Trigger Stagger Animation
+</button>
+<h3>Cards Slide In</h3>
+<div data-stagger-reveal 
+      data-click-event="true"
+      id="myId">
+    <div class="card">Card 1</div>
+    <div class="card">Card 2</div>
+    <div class="card">Card 3</div>
+</div>
+```
+
+<NxStaggerCardsAnimation 
+  button={true}
+  triggerId="myCustomId"
+  data-direction="x"
+  data-stagger-delay="0.2"
+  data-distance="100"
+  data-stagger-method="end"
+/>
