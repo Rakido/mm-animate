@@ -17,8 +17,9 @@ declare global {
   }
 }
 
-// Helper function to generate unique IDs
-const generateUniqueId = () => `stagger-cards-${Math.random().toString(36).substr(2, 9)}`;
+// Create a stable counter outside React's lifecycle
+let COUNTER = 0;
+const getStableId = () => `stagger-cards-${++COUNTER}`;
 
 export default function NxStaggerCardsAnimation({ 
   className = '',
@@ -28,28 +29,27 @@ export default function NxStaggerCardsAnimation({
   ...props 
 }: NxStaggerCardsAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  // Generate a unique ID if none is provided
-  const triggerId = useRef(propTriggerId || generateUniqueId())
+  // Initialize ref with undefined to fix TypeScript error
+  const idRef = useRef<string | undefined>(undefined)
+  
+  // Initialize the ID only once
+  if (!idRef.current) {
+    idRef.current = propTriggerId || getStableId()
+  }
 
   useEffect(() => {
     const loadScript = (src: string): Promise<void> => {
       return new Promise((resolve, reject) => {
-        // Remove any existing script with this src
-        const existingScript = document.querySelector(`script[src*="mm-stagger-animation.js"]`);
+        const existingScript = document.querySelector(`script[src="${src}"]`);
         if (existingScript) {
-          existingScript.remove();
+          resolve();
+          return;
         }
 
         const script = document.createElement('script');
         script.src = src;
         script.async = false;
-        script.onload = () => {
-          // Reset the global instance
-          if (window.moonMoonStagger) {
-            delete window.moonMoonStagger;
-          }
-          resolve();
-        };
+        script.onload = () => resolve();
         script.onerror = (error) => reject(error);
         document.body.appendChild(script);
       });
@@ -57,18 +57,15 @@ export default function NxStaggerCardsAnimation({
 
     const initAnimation = async () => {
       try {
-        // Load dependencies
+        // Load dependencies first
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
-        
-        // Force reload the stagger animation library from jsDelivr
         await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-stagger-animation.js');
         
-        // Wait a bit for initialization
         await new Promise(resolve => setTimeout(resolve, 100));
 
-        if (window.moonMoonStagger && containerRef.current) {
+        if (containerRef.current && window.moonMoonStagger) {
           window.moonMoonStagger.initStaggerAnimation(containerRef.current);
         }
       } catch (error) {
@@ -78,19 +75,56 @@ export default function NxStaggerCardsAnimation({
 
     initAnimation();
 
+    // Add click event listener for the trigger button
+    const triggerButton = document.querySelector(`[data-stagger-trigger="${idRef.current}"]`);
+    const closeButton = document.querySelector(`[data-stagger-close="${idRef.current}"]`);
+
+    const handleTrigger = () => {
+      if (containerRef.current && window.moonMoonStagger) {
+        window.moonMoonStagger.initStaggerAnimation(containerRef.current);
+      }
+    };
+
+    const handleClose = () => {
+      if (containerRef.current && window.ScrollTrigger) {
+        // Kill all ScrollTrigger instances associated with this container
+        window.ScrollTrigger.getAll().forEach(st => {
+          if (st.vars.trigger === containerRef.current) {
+            st.kill();
+          }
+        });
+        // Reset any GSAP animations
+        if (window.gsap) {
+          window.gsap.set(containerRef.current.querySelectorAll('[data-stagger-item]'), {
+            clearProps: 'all'
+          });
+        }
+      }
+    };
+
+    if (triggerButton) {
+      triggerButton.addEventListener('click', handleTrigger);
+    }
+    if (closeButton) {
+      closeButton.addEventListener('click', handleClose);
+    }
+
     return () => {
-      // Cleanup
+      // Remove event listeners
+      if (triggerButton) {
+        triggerButton.removeEventListener('click', handleTrigger);
+      }
+      if (closeButton) {
+        closeButton.removeEventListener('click', handleClose);
+      }
+
+      // Cleanup ScrollTrigger
       if (window.ScrollTrigger) {
         window.ScrollTrigger.getAll().forEach(st => {
           if (st.vars.trigger === containerRef.current) {
             st.kill();
           }
         });
-      }
-      // Clean up the script tag
-      const scriptTag = document.querySelector(`script[src*="mm-stagger-animation.js"]`);
-      if (scriptTag) {
-        scriptTag.remove();
       }
     };
   }, []);
@@ -101,7 +135,7 @@ export default function NxStaggerCardsAnimation({
         <div className="nx-flex nx-justify-between nx-items-center nx-p-4 nx-border-b nx-border-gray-700">
           {button && (
             <button
-              data-stagger-trigger={triggerId.current}
+              data-stagger-trigger={idRef.current}
               className="nx-px-4 nx-py-2 nx-bg-white nx-text-gray-900 nx-rounded-lg nx-font-medium hover:nx-bg-gray-100 nx-transition-colors"
             >
               Trigger Animation
@@ -111,7 +145,7 @@ export default function NxStaggerCardsAnimation({
           <div className="nx-flex nx-gap-2">
             {closeButton && (
               <button
-                data-stagger-close={triggerId.current}
+                data-stagger-close={idRef.current}
                 className="nx-px-4 nx-py-2 nx-bg-gray-700 nx-text-white nx-rounded-lg nx-font-medium hover:nx-bg-gray-600 nx-transition-colors"
                 aria-label="Close animation"
               >
@@ -126,7 +160,7 @@ export default function NxStaggerCardsAnimation({
           ref={containerRef}
           data-stagger-reveal="true"
           data-click-event={button ? "true" : undefined}
-          id={triggerId.current}
+          id={idRef.current}
           className={`
             nx-w-full nx-space-y-4 nx-p-4
             ${className}

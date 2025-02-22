@@ -41,7 +41,8 @@ export default function NxTextAnimation({ children, className = '', ...props }: 
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
         await loadScript('https://unpkg.com/split-type');
-        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-text-animation.js');
+        // Change to jsDelivr URL
+        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@latest/js/mm-text-animation.js');
         await new Promise(resolve => setTimeout(resolve, 100)); // Wait for library
         setIsReady(true);
       } catch (error) {
