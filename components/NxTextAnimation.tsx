@@ -36,14 +36,22 @@ export default function NxTextAnimation({ children, className = '', ...props }: 
 
     const loadScripts = async () => {
       try {
+        // Load GSAP first
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
         await new Promise(resolve => setTimeout(resolve, 100)); // Wait for GSAP
+        
+        // Load other dependencies
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
+        
+        // Load SplitType before the animation library
         await loadScript('https://unpkg.com/split-type');
-        // Change to jsDelivr URL
-        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@latest/js/mm-text-animation.js');
-        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for library
+        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for SplitType
+        
+        // Load the animation library last
+        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-text-animation.js');
+        
+        await new Promise(resolve => setTimeout(resolve, 100)); // Final wait
         setIsReady(true);
       } catch (error) {
         console.error('Error loading animation scripts:', error);
@@ -69,7 +77,7 @@ export default function NxTextAnimation({ children, className = '', ...props }: 
         <div 
           ref={containerRef}
           data-scroll-text-reveal="true"
-          className="nx-text-2xl nx-text-white nx-p-8 nx-m-0 nx-border nx-rounded-xl nx-bg-gray-100/20 nx-border-gray-800 dark:nx-bg-gray-800 dark:nx-border-gray-700"
+          className={`nx-text-2xl nx-text-white nx-p-8 nx-m-0 nx-border nx-rounded-xl nx-bg-gray-100/20 nx-border-gray-800 dark:nx-bg-gray-800 dark:nx-border-gray-700 ${className}`}
           {...props}
         >
           {children}
