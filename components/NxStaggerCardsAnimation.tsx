@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import NxReloadAnimation from './NxReloadAnimation'
 
 interface NxStaggerCardsAnimationProps {
@@ -17,8 +17,9 @@ declare global {
   }
 }
 
-// Helper function to generate unique IDs
-const generateUniqueId = () => `stagger-cards-${Math.random().toString(36).substr(2, 9)}`;
+// Create a stable counter outside React's lifecycle
+let COUNTER = 0;
+const getStableId = () => `stagger-cards-${++COUNTER}`;
 
 export default function NxStaggerCardsAnimation({ 
   className = '',
@@ -28,28 +29,62 @@ export default function NxStaggerCardsAnimation({
   ...props 
 }: NxStaggerCardsAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  // Generate a unique ID if none is provided
-  const triggerId = useRef(propTriggerId || generateUniqueId())
+  const [isScriptsLoaded, setIsScriptsLoaded] = useState(false)
+  const idRef = useRef<string | undefined>(undefined)
+  
+  if (!idRef.current) {
+    idRef.current = propTriggerId || getStableId()
+  }
+
+  const handleTrigger = useCallback(() => {
+    if (containerRef.current && window.moonMoonStagger) {
+      // First reset the elements
+      if (window.gsap) {
+        window.gsap.set(containerRef.current.querySelectorAll('[data-stagger-item]'), {
+          clearProps: 'all',
+          opacity: 0,
+          y: 50
+        });
+      }
+      // Then trigger the animation
+      setTimeout(() => {
+        window.moonMoonStagger.initStaggerAnimation(containerRef.current);
+      }, 100);
+    }
+  }, []);
+
+  const handleClose = useCallback(() => {
+    if (containerRef.current && window.ScrollTrigger) {
+      // Kill any existing ScrollTrigger instances
+      window.ScrollTrigger.getAll().forEach(st => {
+        if (st.vars.trigger === containerRef.current) {
+          st.kill();
+        }
+      });
+      // Reset elements to their initial state
+      if (window.gsap) {
+        window.gsap.set(containerRef.current.querySelectorAll('[data-stagger-item]'), {
+          clearProps: 'all',
+          opacity: 0,
+          y: 50
+        });
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const loadScript = (src: string): Promise<void> => {
       return new Promise((resolve, reject) => {
-        // Remove any existing script with this src
-        const existingScript = document.querySelector(`script[src*="mm-stagger-animation.js"]`);
+        const existingScript = document.querySelector(`script[src="${src}"]`);
         if (existingScript) {
-          existingScript.remove();
+          resolve();
+          return;
         }
 
         const script = document.createElement('script');
         script.src = src;
         script.async = false;
-        script.onload = () => {
-          // Reset the global instance
-          if (window.moonMoonStagger) {
-            delete window.moonMoonStagger;
-          }
-          resolve();
-        };
+        script.onload = () => resolve();
         script.onerror = (error) => reject(error);
         document.body.appendChild(script);
       });
@@ -57,19 +92,25 @@ export default function NxStaggerCardsAnimation({
 
     const initAnimation = async () => {
       try {
-        // Load dependencies
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
+        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@latest/js/mm-stagger-animation.js');
         
-        // Force reload the stagger animation library from jsDelivr
-        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-stagger-animation.js');
-        
-        // Wait a bit for initialization
         await new Promise(resolve => setTimeout(resolve, 100));
+        setIsScriptsLoaded(true);
 
-        if (window.moonMoonStagger && containerRef.current) {
-          window.moonMoonStagger.initStaggerAnimation(containerRef.current);
+        if (containerRef.current && window.moonMoonStagger) {
+          // Set initial state for button trigger
+          if (button) {
+            window.gsap.set(containerRef.current.querySelectorAll('[data-stagger-item]'), {
+              opacity: 0,
+              y: 50
+            });
+          } else {
+            // Auto-initialize if not using button trigger
+            window.moonMoonStagger.initStaggerAnimation(containerRef.current);
+          }
         }
       } catch (error) {
         console.error('Error loading animation scripts:', error);
@@ -77,23 +118,7 @@ export default function NxStaggerCardsAnimation({
     };
 
     initAnimation();
-
-    return () => {
-      // Cleanup
-      if (window.ScrollTrigger) {
-        window.ScrollTrigger.getAll().forEach(st => {
-          if (st.vars.trigger === containerRef.current) {
-            st.kill();
-          }
-        });
-      }
-      // Clean up the script tag
-      const scriptTag = document.querySelector(`script[src*="mm-stagger-animation.js"]`);
-      if (scriptTag) {
-        scriptTag.remove();
-      }
-    };
-  }, []);
+  }, [button]);
 
   return (
     <div className="nx-relative nx-w-full nx-overflow-hidden">
@@ -101,7 +126,7 @@ export default function NxStaggerCardsAnimation({
         <div className="nx-flex nx-justify-between nx-items-center nx-p-4 nx-border-b nx-border-gray-700">
           {button && (
             <button
-              data-stagger-trigger={triggerId.current}
+              onClick={handleTrigger}
               className="nx-px-4 nx-py-2 nx-bg-white nx-text-gray-900 nx-rounded-lg nx-font-medium hover:nx-bg-gray-100 nx-transition-colors"
             >
               Trigger Animation
@@ -111,7 +136,7 @@ export default function NxStaggerCardsAnimation({
           <div className="nx-flex nx-gap-2">
             {closeButton && (
               <button
-                data-stagger-close={triggerId.current}
+                onClick={handleClose}
                 className="nx-px-4 nx-py-2 nx-bg-gray-700 nx-text-white nx-rounded-lg nx-font-medium hover:nx-bg-gray-600 nx-transition-colors"
                 aria-label="Close animation"
               >
@@ -126,7 +151,7 @@ export default function NxStaggerCardsAnimation({
           ref={containerRef}
           data-stagger-reveal="true"
           data-click-event={button ? "true" : undefined}
-          id={triggerId.current}
+          id={idRef.current}
           className={`
             nx-w-full nx-space-y-4 nx-p-4
             ${className}

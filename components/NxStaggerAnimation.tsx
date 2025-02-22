@@ -52,7 +52,7 @@ export default function NxStaggerAnimation({ children, className = '', ...props 
         await new Promise(resolve => setTimeout(resolve, 100)); // Wait for GSAP
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
-        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-stagger-animation.js');
+        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@latest/js/mm-stagger-animation.js');
         await new Promise(resolve => setTimeout(resolve, 100)); // Wait for library
         setIsReady(true);
       } catch (error) {
