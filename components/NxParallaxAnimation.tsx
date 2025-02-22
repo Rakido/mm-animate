@@ -17,7 +17,6 @@ declare global {
     moonMoonParallax: any;
     gsap: any;
     ScrollTrigger: any;
-    moonMoonParallaxInitialized?: boolean;
   }
 }
 
@@ -28,8 +27,8 @@ export default function NxParallaxAnimation({
   'data-parallax': parallax = true,
   'data-parallax-direction': direction = 'y',
   'data-scrub': scrub = true,
-  'data-speed': speed,
-  'data-zoom': zoom,
+  'data-speed': speed = 35,
+  'data-zoom': zoom = true,
   ...props 
 }: NxParallaxAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -55,7 +54,6 @@ export default function NxParallaxAnimation({
 
     const initAnimation = async () => {
       try {
-        // Load GSAP and ScrollTrigger only if not already loaded
         if (!window.gsap) {
           await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
           await new Promise(resolve => setTimeout(resolve, 100));
@@ -65,28 +63,22 @@ export default function NxParallaxAnimation({
           await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
           await new Promise(resolve => setTimeout(resolve, 100));
         }
-
-        // Load parallax library only if not initialized
-        if (!window.moonMoonParallaxInitialized) {
-          await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-parallax-animation.js');
-          window.moonMoonParallaxInitialized = true;
-          await new Promise(resolve => setTimeout(resolve, 100));
-        }
         
-        setIsReady(true);
+        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-parallax-animation.js');
+        await new Promise(resolve => setTimeout(resolve, 100));
 
-        // Initialize animation
-        if (containerRef.current && window.moonMoonParallax) {
-          // Kill existing ScrollTrigger instances for this container
+        if (window.moonMoonParallax) {
+          // Kill existing ScrollTrigger instances
           if (window.ScrollTrigger) {
-            window.ScrollTrigger.getAll().forEach(st => {
-              if (st.vars.trigger === containerRef.current) {
-                st.kill();
-              }
-            });
+            window.ScrollTrigger.getAll().forEach(st => st.kill());
           }
           
-          window.moonMoonParallax.initParallax(containerRef.current);
+          setIsReady(true);
+          
+          // Need to wait a bit for the DOM to be ready
+          setTimeout(() => {
+            window.moonMoonParallax.initParallax();
+          }, 100);
         }
       } catch (error) {
         console.error('Error loading animation scripts:', error);
@@ -95,14 +87,9 @@ export default function NxParallaxAnimation({
 
     initAnimation();
 
-    // Cleanup function
     return () => {
-      if (window.ScrollTrigger && containerRef.current) {
-        window.ScrollTrigger.getAll().forEach(st => {
-          if (st.vars.trigger === containerRef.current) {
-            st.kill();
-          }
-        });
+      if (window.ScrollTrigger) {
+        window.ScrollTrigger.getAll().forEach(st => st.kill());
       }
     };
   }, []);
@@ -120,21 +107,25 @@ export default function NxParallaxAnimation({
           height: typeof height === 'number' ? `${height}px` : height,
           visibility: isReady ? 'visible' : 'hidden'
         }}
-        {...(imageFull ? props : {})}
       >
-        <img 
-          src={src}
-          className={`
-            ${imageFull ? 'nx-w-full nx-h-[120%] nx-object-cover' : 'nx-w-[200px] nx-h-[200px] nx-object-cover'}
-          `}
-          data-parallax={parallax ? "true" : "false"}
+        <div 
+          data-parallax="true"
           data-parallax-direction={direction}
-          data-scrub={scrub ? "true" : "false"}
           data-speed={speed}
-          data-zoom={zoom}
+          data-scrub={scrub}
           data-image-parallax="true"
-          {...(!imageFull ? props : {})}
-        />
+        >
+          <img 
+            src={src}
+            className={`
+              ${imageFull ? 'nx-w-full nx-h-[120%] nx-object-cover' : 'nx-w-[200px] nx-h-[200px] nx-object-cover'}
+            `}
+            style={{
+              willChange: 'transform',
+              transformOrigin: 'center center'
+            }}
+          />
+        </div>
       </div>
     </div>
   )

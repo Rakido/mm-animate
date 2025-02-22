@@ -13,10 +13,8 @@ export function LenisProvider({ children }: LenisProviderProps) {
       window.gsap.ticker.add((time: number) => {
         lenis.current?.raf(time * 1000)
       })
-
-      window.gsap.ticker.lagSmoothing(0)
     }
   }, [lenis])
 
-  return <>{children}</>
+  return children
 } 

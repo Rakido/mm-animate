@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import NxReloadAnimation from './NxReloadAnimation'
 
 interface NxStaggerCardsAnimationProps {
@@ -29,13 +29,48 @@ export default function NxStaggerCardsAnimation({
   ...props 
 }: NxStaggerCardsAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  // Initialize ref with undefined to fix TypeScript error
+  const [isScriptsLoaded, setIsScriptsLoaded] = useState(false)
   const idRef = useRef<string | undefined>(undefined)
   
-  // Initialize the ID only once
   if (!idRef.current) {
     idRef.current = propTriggerId || getStableId()
   }
+
+  const handleTrigger = useCallback(() => {
+    if (containerRef.current && window.moonMoonStagger) {
+      // First reset the elements
+      if (window.gsap) {
+        window.gsap.set(containerRef.current.querySelectorAll('[data-stagger-item]'), {
+          clearProps: 'all',
+          opacity: 0,
+          y: 50
+        });
+      }
+      // Then trigger the animation
+      setTimeout(() => {
+        window.moonMoonStagger.initStaggerAnimation(containerRef.current);
+      }, 100);
+    }
+  }, []);
+
+  const handleClose = useCallback(() => {
+    if (containerRef.current && window.ScrollTrigger) {
+      // Kill any existing ScrollTrigger instances
+      window.ScrollTrigger.getAll().forEach(st => {
+        if (st.vars.trigger === containerRef.current) {
+          st.kill();
+        }
+      });
+      // Reset elements to their initial state
+      if (window.gsap) {
+        window.gsap.set(containerRef.current.querySelectorAll('[data-stagger-item]'), {
+          clearProps: 'all',
+          opacity: 0,
+          y: 50
+        });
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const loadScript = (src: string): Promise<void> => {
@@ -57,16 +92,25 @@ export default function NxStaggerCardsAnimation({
 
     const initAnimation = async () => {
       try {
-        // Load dependencies first
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js');
-        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@main/js/mm-stagger-animation.js');
+        await loadScript('https://cdn.jsdelivr.net/gh/Rakido/mm-animation-library@latest/js/mm-stagger-animation.js');
         
         await new Promise(resolve => setTimeout(resolve, 100));
+        setIsScriptsLoaded(true);
 
         if (containerRef.current && window.moonMoonStagger) {
-          window.moonMoonStagger.initStaggerAnimation(containerRef.current);
+          // Set initial state for button trigger
+          if (button) {
+            window.gsap.set(containerRef.current.querySelectorAll('[data-stagger-item]'), {
+              opacity: 0,
+              y: 50
+            });
+          } else {
+            // Auto-initialize if not using button trigger
+            window.moonMoonStagger.initStaggerAnimation(containerRef.current);
+          }
         }
       } catch (error) {
         console.error('Error loading animation scripts:', error);
@@ -74,60 +118,7 @@ export default function NxStaggerCardsAnimation({
     };
 
     initAnimation();
-
-    // Add click event listener for the trigger button
-    const triggerButton = document.querySelector(`[data-stagger-trigger="${idRef.current}"]`);
-    const closeButton = document.querySelector(`[data-stagger-close="${idRef.current}"]`);
-
-    const handleTrigger = () => {
-      if (containerRef.current && window.moonMoonStagger) {
-        window.moonMoonStagger.initStaggerAnimation(containerRef.current);
-      }
-    };
-
-    const handleClose = () => {
-      if (containerRef.current && window.ScrollTrigger) {
-        // Kill all ScrollTrigger instances associated with this container
-        window.ScrollTrigger.getAll().forEach(st => {
-          if (st.vars.trigger === containerRef.current) {
-            st.kill();
-          }
-        });
-        // Reset any GSAP animations
-        if (window.gsap) {
-          window.gsap.set(containerRef.current.querySelectorAll('[data-stagger-item]'), {
-            clearProps: 'all'
-          });
-        }
-      }
-    };
-
-    if (triggerButton) {
-      triggerButton.addEventListener('click', handleTrigger);
-    }
-    if (closeButton) {
-      closeButton.addEventListener('click', handleClose);
-    }
-
-    return () => {
-      // Remove event listeners
-      if (triggerButton) {
-        triggerButton.removeEventListener('click', handleTrigger);
-      }
-      if (closeButton) {
-        closeButton.removeEventListener('click', handleClose);
-      }
-
-      // Cleanup ScrollTrigger
-      if (window.ScrollTrigger) {
-        window.ScrollTrigger.getAll().forEach(st => {
-          if (st.vars.trigger === containerRef.current) {
-            st.kill();
-          }
-        });
-      }
-    };
-  }, []);
+  }, [button]);
 
   return (
     <div className="nx-relative nx-w-full nx-overflow-hidden">
@@ -135,7 +126,7 @@ export default function NxStaggerCardsAnimation({
         <div className="nx-flex nx-justify-between nx-items-center nx-p-4 nx-border-b nx-border-gray-700">
           {button && (
             <button
-              data-stagger-trigger={idRef.current}
+              onClick={handleTrigger}
               className="nx-px-4 nx-py-2 nx-bg-white nx-text-gray-900 nx-rounded-lg nx-font-medium hover:nx-bg-gray-100 nx-transition-colors"
             >
               Trigger Animation
@@ -145,7 +136,7 @@ export default function NxStaggerCardsAnimation({
           <div className="nx-flex nx-gap-2">
             {closeButton && (
               <button
-                data-stagger-close={idRef.current}
+                onClick={handleClose}
                 className="nx-px-4 nx-py-2 nx-bg-gray-700 nx-text-white nx-rounded-lg nx-font-medium hover:nx-bg-gray-600 nx-transition-colors"
                 aria-label="Close animation"
               >
