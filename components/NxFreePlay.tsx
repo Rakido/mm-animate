@@ -85,7 +85,7 @@ export default function NxFreePlay() {
     ])
 
     const randomSplitting = getRandomItem(['chars', 'words'])
-    const randomAnimation = getRandomItem(['fade-in', 'slide', 'shutter-word'])
+    const randomAnimation = getRandomItem(['fade-in', 'slide', 'shutter-word', 'scale'])
     const randomAxis = getRandomItem(['x', 'x-', 'y', 'y-'])
     
     // Always use elastic.out for easing and keep delay at 0

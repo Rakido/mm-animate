@@ -31,6 +31,34 @@ L'attribut `data-rotate` donne une rotation de départ aux éléments :
 
 ---
 
+## Scale
+
+L'attribut `data-animate="scale"` permet d'animer les caractères, mots ou lignes depuis un scale de 0 à 1 :
+
+```html
+<div 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="scale"
+  data-stagger="0.015"
+  data-easing="elastic.out"
+>
+  Les caractères s'animent avec un scale de 0 à 1
+</div>
+```
+
+<NxTextAnimation 
+  data-scroll-text-reveal 
+  data-splitting="chars"
+  data-animate="scale"
+  data-stagger="0.015"
+  data-easing="elastic.out"
+>
+  Les caractères s'animent d'un scale de 0 à 1
+</NxTextAnimation>
+
+---
+
 ## Skew
 
 L'attribut `data-skew` donne une inclinaison de départ aux éléments :
