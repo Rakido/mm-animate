@@ -9,6 +9,7 @@ interface NxParallaxAnimationProps {
   'data-scrub'?: boolean | number;
   'data-speed'?: string | number;
   'data-zoom'?: boolean | number;
+  'data-parallax-color'?: string;
   [key: string]: any;
 }
 
@@ -23,12 +24,13 @@ declare global {
 export default function NxParallaxAnimation({ 
   src, 
   imageFull = false,
-  height = '400px',
+  height = '100vh',
   'data-parallax': parallax = true,
   'data-parallax-direction': direction = 'y',
   'data-scrub': scrub = true,
   'data-speed': speed = 35,
   'data-zoom': zoom = true,
+  'data-parallax-color': backgroundColor,
   ...props 
 }: NxParallaxAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -95,38 +97,27 @@ export default function NxParallaxAnimation({
   }, []);
 
   return (
-    <div className="nx-relative nx-w-full nx-mt-4 nx-rounded-xl nx-overflow-hidden">
-      <div 
-        ref={containerRef}
-        className={`
-          nx-relative 
-          nx-overflow-hidden
-          ${!imageFull && 'nx-flex nx-items-center nx-justify-center'}
-        `}
-        style={{ 
-          height: typeof height === 'number' ? `${height}px` : height,
-          visibility: isReady ? 'visible' : 'hidden'
-        }}
-      >
-        <div 
-          data-parallax="true"
-          data-parallax-direction={direction}
-          data-speed={speed}
-          data-scrub={scrub}
-          data-image-parallax="true"
-        >
-          <img 
-            src={src}
-            className={`
-              ${imageFull ? 'nx-w-full nx-h-[120%] nx-object-cover' : 'nx-w-[200px] nx-h-[200px] nx-object-cover'}
-            `}
-            style={{
-              willChange: 'transform',
-              transformOrigin: 'center center'
-            }}
-          />
-        </div>
-      </div>
+    <div 
+      ref={containerRef}
+      data-parallax="true"
+      data-parallax-color={backgroundColor}
+      style={{ 
+        height: typeof height === 'number' ? `${height}px` : height,
+        visibility: isReady ? 'visible' : 'hidden',
+      }}
+    >
+      {src && (
+        <img 
+          src={src}
+          className={`
+            ${imageFull ? 'nx-w-full nx-h-[120%] nx-object-cover' : 'nx-w-[200px] nx-h-[200px] nx-object-cover'}
+          `}
+          style={{
+            willChange: 'transform',
+            transformOrigin: 'center center'
+          }}
+        />
+      )}
     </div>
   )
 } 
